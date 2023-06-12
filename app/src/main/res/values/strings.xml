@@ -3,4 +3,6 @@
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In imperdiet congue aliquam. Sed vitae est a nibh egestas semper non id orci. Quisque non feugiat justo, eu elementum tellus. Quisque ornare enim nisl, at ultrices nunc sodales non. Nulla facilisi. Cras semper et erat eu elementum. Sed interdum, urna non lacinia luctus, felis</string>
     <string name="my_todos">Мои дела</string>
     <string name="visibility">Visibility</string>
+    <string name="change_visibility">Change visibility</string>
+    <string name="test_completed">Выполнено - 5</string>
 </resources>
