@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LargeTitle" parent="Widget.AppCompat.TextView">
+        <item name="font">32sp</item>
+        <item name="fontFamily">Roboto</item>
+    </style>
+</resources>

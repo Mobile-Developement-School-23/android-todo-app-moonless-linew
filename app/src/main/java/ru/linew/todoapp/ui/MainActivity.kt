@@ -1,7 +1,8 @@
-package ru.linew.todoapp
+package ru.linew.todoapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import ru.linew.todoapp.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
