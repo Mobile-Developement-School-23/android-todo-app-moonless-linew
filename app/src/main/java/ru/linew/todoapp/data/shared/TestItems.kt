@@ -6,7 +6,7 @@ import ru.linew.todoapp.data.model.TodoItemDto
 object TestItems {
     val items = mutableListOf<TodoItemDto>(
         TodoItemDto(
-            id = "1f13sf",
+            id = "1",
             body = "Сделать ДЗ",
             importance = "HIGH",
             deadlineTime = 1686560699527,
@@ -15,7 +15,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "2ff",
+            id = "2",
             body = "Погладить кошку",
             importance = "MEDIUM",
             deadlineTime = null,
@@ -24,7 +24,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "3fwf",
+            id = "3",
             body = "Сделать алгосы Сделать алгосы Сделать алгосы Сделать алгосы Сделать алгосы" +
                     " Сделать алгосы Сделать алгосы Сделать алгосы Сделать алгосы точно не для" +
                     " того чтобы проверить высоту элемента",
@@ -35,7 +35,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "4ff",
+            id = "4",
             body = "Поиграть в футбол",
             importance = "LOW",
             deadlineTime = null,
@@ -44,7 +44,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "5ff",
+            id = "5",
             body = "Сделать курсач",
             importance = "HIGH",
             deadlineTime = 1686560699527,
@@ -53,7 +53,7 @@ object TestItems {
             modificationTime = 1234567891027
         ),
         TodoItemDto(
-            id = "1f13sf",
+            id = "6",
             body = "Сделать ДЗ",
             importance = "HIGH",
             deadlineTime = 1686560699527,
@@ -62,7 +62,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "2ff",
+            id = "7",
             body = "Погладить кошку",
             importance = "MEDIUM",
             deadlineTime = null,
@@ -71,7 +71,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "3fwf",
+            id = "8",
             body = "Сделать алгосы Сделать алгосы Сделать алгосы Сделать алгосы Сделать алгосы" +
                     " Сделать алгосы Сделать алгосы Сделать алгосы Сделать алгосы точно не для" +
                     " того чтобы проверить высоту элемента",
@@ -82,7 +82,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "4ff",
+            id = "9",
             body = "Поиграть в футбол",
             importance = "LOW",
             deadlineTime = null,
@@ -91,7 +91,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "5ff",
+            id = "10",
             body = "Сделать курсач",
             importance = "HIGH",
             deadlineTime = 1686560699527,
@@ -100,7 +100,7 @@ object TestItems {
             modificationTime = 1234567891027
         ),
         TodoItemDto(
-            id = "1f13sf",
+            id = "11",
             body = "Сделать ДЗ",
             importance = "HIGH",
             deadlineTime = 1686560699527,
@@ -109,7 +109,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "2ff",
+            id = "12",
             body = "Погладить кошку",
             importance = "MEDIUM",
             deadlineTime = null,
@@ -118,7 +118,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "3fwf",
+            id = "13",
             body = "Сделать алгосы Сделать алгосы Сделать алгосы Сделать алгосы Сделать алгосы" +
                     " Сделать алгосы Сделать алгосы Сделать алгосы Сделать алгосы точно не для" +
                     " того чтобы проверить высоту элемента",
@@ -129,7 +129,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "4ff",
+            id = "14",
             body = "Поиграть в футбол",
             importance = "LOW",
             deadlineTime = null,
@@ -138,7 +138,7 @@ object TestItems {
             modificationTime = null
         ),
         TodoItemDto(
-            id = "5ff",
+            id = "15",
             body = "Сделать курсач",
             importance = "HIGH",
             deadlineTime = 1686560699527,

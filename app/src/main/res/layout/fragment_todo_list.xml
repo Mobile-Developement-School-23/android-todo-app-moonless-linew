@@ -67,7 +67,6 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginHorizontal="8dp"
             android:id="@+id/todoList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
