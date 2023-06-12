@@ -16,7 +16,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/infoIcon"
-        android:tint="@color/tertiary"
+        android:tint="@color/label_light_tertiary"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@drawable/info_outline"
@@ -38,8 +38,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/high_priority"
-            android:visibility="visible"
-            tools:visibility="invisible" />
+            android:visibility="gone"
+            tools:visibility="gone" />
 
         <com.google.android.material.textview.MaterialTextView
             style="@style/Body"

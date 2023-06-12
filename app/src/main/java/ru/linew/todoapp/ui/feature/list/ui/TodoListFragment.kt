@@ -6,14 +6,18 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.linew.todoapp.R
+import ru.linew.todoapp.data.mapper.toUiLayer
+import ru.linew.todoapp.data.repository.TodoItemsRepositoryImpl
 import ru.linew.todoapp.databinding.FragmentTodoListBinding
+import ru.linew.todoapp.ui.feature.list.ui.recycler.TodoListAdapter
 
 class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     val binding: FragmentTodoListBinding by viewBinding()
+    val adapter = TodoListAdapter()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.button.setOnClickListener {
-            findNavController().navigate(R.id.action_todoListFragment_to_todoAddFragment)
-        }
+        binding.todoList.adapter = adapter
+        adapter.submitList(TodoItemsRepositoryImpl().todos.map { it.toUiLayer() })
+
     }
 }
