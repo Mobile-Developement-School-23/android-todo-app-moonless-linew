@@ -1,4 +1,4 @@
-package ru.linew.todoapp.data.mapper
+package ru.linew.todoapp.data.shared
 
 import ru.linew.todoapp.data.model.TodoItemDto
 

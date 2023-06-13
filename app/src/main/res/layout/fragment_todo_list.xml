@@ -34,6 +34,7 @@
                 >
             </com.google.android.material.appbar.MaterialToolbar>
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/visibilityIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/visibility"

@@ -1,15 +1,23 @@
 package ru.linew.todoapp.data.repository
 
-import ru.linew.todoapp.data.mapper.TestItems
-import ru.linew.todoapp.data.mapper.toDataLayer
 import ru.linew.todoapp.data.model.TodoItemDto
-import ru.linew.todoapp.ui.feature.list.model.TodoItem
+import ru.linew.todoapp.data.shared.TestItems
+import ru.linew.todoapp.ui.feature.list.interactor.TodoItemsRepository
 
 
-class TodoItemsRepositoryImpl {
+class TodoItemsRepositoryImpl: TodoItemsRepository {
     //хардкод
     val todos = TestItems.items
-    fun addTodo(todoItem: TodoItem){
-        todos.add(todoItem.toDataLayer())
+    override fun addTodo(item: TodoItemDto) {
+        todos.add(item)
     }
+
+    override fun deleteTodo(item: TodoItemDto) {
+        todos.remove(item)
+    }
+
+    override fun provideListOfTodo(): List<TodoItemDto> {
+        return todos
+    }
+
 }

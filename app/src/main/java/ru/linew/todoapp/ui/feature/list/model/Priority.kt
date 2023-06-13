@@ -1,5 +1,5 @@
 package ru.linew.todoapp.ui.feature.list.model
 
-enum class Importance {
+enum class Priority {
     LOW, MEDIUM, HIGH
 }
