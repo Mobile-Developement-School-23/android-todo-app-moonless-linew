@@ -16,6 +16,16 @@
         <item name="android:lineHeight">32sp</item>
         <item name="android:textSize">20sp</item>
     </style>
+    <style name="SubHead">
+        <item name="android:textColor">?attr/label_tertiary</item>
+        <item name="android:lineHeight">20sp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="Button" >
+        <item name="android:textColor">?attr/color_blue</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
     <style name="Widget.App.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
         <item name="buttonTint">@color/button_tint</item>

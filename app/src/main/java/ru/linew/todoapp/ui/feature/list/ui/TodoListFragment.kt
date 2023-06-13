@@ -33,5 +33,8 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
                 }
             }
         }
+        binding.addTodo.setOnClickListener {
+            findNavController().navigate(R.id.action_todoListFragment_to_todoAddFragment)
+        }
     }
 }

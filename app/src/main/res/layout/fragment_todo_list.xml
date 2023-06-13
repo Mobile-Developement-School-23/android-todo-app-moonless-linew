@@ -34,6 +34,7 @@
                 >
             </com.google.android.material.appbar.MaterialToolbar>
             <com.google.android.material.imageview.ShapeableImageView
+                android:background="?selectableItemBackgroundBorderless"
                 android:id="@+id/visibilityIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,6 +77,7 @@
             tools:listitem="@layout/todo_item" />
     </androidx.cardview.widget.CardView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addTodo"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:src="@drawable/add"
@@ -85,7 +87,8 @@
         android:layout_marginEnd="14dp"
         android:layout_marginBottom="40dp"
         android:backgroundTint="?attr/color_blue"
-        app:layout_behavior="com.google.android.material.floatingactionbutton.FloatingActionButton$Behavior"/>
+        app:layout_behavior="com.google.android.material.floatingactionbutton.FloatingActionButton$Behavior"
+        android:contentDescription="@string/add_todo" />
 
 
 
