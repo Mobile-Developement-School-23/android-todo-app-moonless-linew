@@ -1,9 +1,11 @@
 package ru.linew.todoapp.ui.feature.list.ui.recycler
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
+import com.google.android.material.checkbox.MaterialCheckBox
 import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.TodoItemBinding
 import ru.linew.todoapp.ui.feature.list.model.Priority
@@ -39,13 +41,23 @@ class TodoListAdapter : ListAdapter<TodoItem, TodoListAdapter.ViewHolder>(ItemCa
                         visibility = View.VISIBLE
                         setImageResource(R.drawable.high_priority)
                     }
-                    binding.checkBox.apply {
-                        isErrorShown = true
-                        setOnCheckedChangeListener { buttonView, isChecked ->
-                            isErrorShown = !isChecked
-                        }
+                    binding.checkBox.isErrorShown = true
+                    binding.checkBox.addOnCheckedStateChangedListener { checkBox, state ->
+                        checkBox.isErrorShown = MaterialCheckBox.STATE_CHECKED != state
                     }
 
+                }
+            }
+            binding.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    with(binding.todoBody) {
+                        paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                    }
+                } else {
+                    with(binding.todoBody) {
+                        paintFlags =
+                            binding.todoBody.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                    }
                 }
             }
 

@@ -45,7 +45,7 @@ object TestItems {
         ),
         TodoItemDto(
             id = "5ff",
-            body = "Сделать                            курсач",
+            body = "Сделать курсач",
             importance = "HIGH",
             deadlineTime = 1686560699527,
             isCompleted = false,
@@ -92,7 +92,7 @@ object TestItems {
         ),
         TodoItemDto(
             id = "5ff",
-            body = "Сделать                            курсач",
+            body = "Сделать курсач",
             importance = "HIGH",
             deadlineTime = 1686560699527,
             isCompleted = false,
@@ -139,7 +139,7 @@ object TestItems {
         ),
         TodoItemDto(
             id = "5ff",
-            body = "Сделать                            курсач",
+            body = "Сделать курсач",
             importance = "HIGH",
             deadlineTime = 1686560699527,
             isCompleted = false,

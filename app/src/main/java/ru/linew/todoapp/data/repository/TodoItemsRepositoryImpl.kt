@@ -20,4 +20,8 @@ class TodoItemsRepositoryImpl: TodoItemsRepository {
         return todos
     }
 
+    override fun markTodoAsCompleted(item: TodoItemDto) {
+        todos[todos.indexOf(item)].isCompleted = true
+    }
+
 }

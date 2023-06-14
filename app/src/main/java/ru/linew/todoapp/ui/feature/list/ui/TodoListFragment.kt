@@ -20,7 +20,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         super.onViewCreated(view, savedInstanceState)
         binding.todoList.adapter = adapter
         adapter.submitList(repository.provideListOfTodo().map { it.toUiLayer() })
-        var visibilityState: Boolean = false
+        var visibilityState = true
         binding.visibilityIcon.apply {
             setOnClickListener {
                 if(visibilityState == false){

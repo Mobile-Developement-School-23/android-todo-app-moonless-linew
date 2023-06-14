@@ -9,7 +9,10 @@
     <string name="add_todo">Add todo</string>
     <string name="priority">Важность</string>
     <string name="no">Нет</string>
-    <string name="what_to_do">Что надо cделать...</string>
+    <string name="what_to_do">Что надо cделать…</string>
     <string name="low">Низкий</string>
-    <string name="high">Высокий</string>
+    <string name="high"><font color="#FF3B30">Высокий</font></string>
+    <string name="make_until">Сделать до</string>
+    <string name="delete">Удалить</string>
+    <string name="test_date">2 июня 2012</string>
 </resources>

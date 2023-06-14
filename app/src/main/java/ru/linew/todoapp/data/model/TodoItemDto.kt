@@ -5,7 +5,7 @@ data class TodoItemDto(
     val body: String,
     val importance: String,
     val deadlineTime: Long?,
-    val isCompleted: Boolean,
+    var isCompleted: Boolean,
     val creationTime: Long,
     val modificationTime: Long?
 )

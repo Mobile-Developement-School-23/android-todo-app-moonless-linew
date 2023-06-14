@@ -6,4 +6,6 @@ interface TodoItemsRepository {
     fun addTodo(item: TodoItemDto)
     fun deleteTodo(item: TodoItemDto)
     fun provideListOfTodo(): List<TodoItemDto>
+
+    fun markTodoAsCompleted(item: TodoItemDto)
 }
