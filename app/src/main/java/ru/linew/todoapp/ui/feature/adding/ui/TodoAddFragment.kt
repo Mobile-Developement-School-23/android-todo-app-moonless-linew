@@ -16,6 +16,7 @@ import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.FragmentTodoAddBinding
 import ru.linew.todoapp.ui.feature.adding.viewmodel.TodoAddFragmentViewModel
 import ru.linew.todoapp.ui.feature.list.model.Priority
+import ru.linew.todoapp.ui.feature.list.ui.utils.Keys
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -101,8 +102,11 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
             saveButton.setOnClickListener {
                 findNavController().navigateUp()
             }
-
+            //завтра поправлю этот костыль
             deleteButton.setOnClickListener {
+                if (arguments != null){
+                    viewModel.deleteItem(arguments!!.getString(Keys.TODO_ID_ARGUMENT_KEY)!!)
+                }
                 findNavController().navigateUp()
             }
             if (arguments == null) {
