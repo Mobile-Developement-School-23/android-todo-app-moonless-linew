@@ -15,17 +15,18 @@ import ru.linew.todoapp.databinding.FragmentTodoListBinding
 import ru.linew.todoapp.ui.feature.list.interactor.TodoItemsRepository
 import ru.linew.todoapp.ui.feature.list.model.TodoItem
 import ru.linew.todoapp.ui.feature.list.ui.recycler.TodoListAdapter
+import ru.linew.todoapp.ui.feature.list.ui.utils.Keys
 
 class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private val binding: FragmentTodoListBinding by viewBinding()
     private val repository: TodoItemsRepository = TodoItemsRepositoryImpl()
-    private val itemClickCallback: (View, TodoItem) -> Unit = { view: View, _: TodoItem ->
+    private val itemClickCallback: (View, TodoItem) -> Unit = { view: View, todoItem: TodoItem ->
         val extras = FragmentNavigatorExtras(view to getString(R.string.card_edit_transition))
+        val bundle = Bundle().apply {
+            putString(Keys.TODO_ID_ARGUMENT_KEY, todoItem.id)
+        }
         findNavController().navigate(
-            R.id.action_todoListFragment_to_todoAddFragment,
-            null,
-            null,
-            extras
+            R.id.action_todoListFragment_to_todoAddFragment, bundle, null, extras
         )
     }
     private val adapter = TodoListAdapter(itemClickCallback)
@@ -43,12 +44,12 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         var visibilityState = true
         binding.visibilityIcon.apply {
             setOnClickListener {
-                if (!visibilityState) {
+                visibilityState = if (!visibilityState) {
                     setImageResource(R.drawable.visibility)
-                    visibilityState = true
+                    true
                 } else {
                     setImageResource(R.drawable.visibility_off)
-                    visibilityState = false
+                    false
                 }
             }
         }

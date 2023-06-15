@@ -29,8 +29,10 @@ class TodoAddFragment: Fragment(R.layout.fragment_todo_add) {
             scrimColor = Color.TRANSPARENT
         }
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         with(binding){
             toolbar.setNavigationOnClickListener {
                 findNavController().navigateUp()
