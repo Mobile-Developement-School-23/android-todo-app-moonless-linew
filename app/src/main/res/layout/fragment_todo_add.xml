@@ -62,6 +62,7 @@
                     tools:layout_editor_absoluteX="16dp">
 
                     <EditText
+                        android:id="@+id/inputBody"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="8dp"
@@ -129,6 +130,7 @@
                     android:id="@+id/makeUntil"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="invisible"
                     android:text="@string/test_date"
                     android:textAppearance="@style/Button"
                     app:layout_constraintStart_toStartOf="@+id/materialTextView"
@@ -136,7 +138,7 @@
                     app:layout_editor_absoluteY="400dp" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchMaterial"
+                    android:id="@+id/makeUntilSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
@@ -152,7 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="48dp"
-                    app:layout_constraintTop_toBottomOf="@+id/switchMaterial" />
+                    app:layout_constraintTop_toBottomOf="@+id/makeUntilSwitch" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/deleteButton"

@@ -36,7 +36,7 @@ class TodoListAdapter(val onTodoClick: (View, TodoItem) -> Unit) : ListAdapter<T
                     visibility = View.VISIBLE
                     setImageResource(R.drawable.low_priority)
                 }
-                Priority.MEDIUM -> binding.priorityIcon.visibility = View.GONE
+                Priority.NO -> binding.priorityIcon.visibility = View.GONE
                 Priority.HIGH -> {
                     binding.priorityIcon.apply {
                         visibility = View.VISIBLE

@@ -17,7 +17,7 @@ object TestItems {
         TodoItemDto(
             id = "2",
             body = "Погладить кошку",
-            importance = "MEDIUM",
+            importance = "NO",
             deadlineTime = null,
             isCompleted = false,
             creationTime = 1683540399527,
@@ -64,7 +64,7 @@ object TestItems {
         TodoItemDto(
             id = "7",
             body = "Погладить кошку",
-            importance = "MEDIUM",
+            importance = "NO",
             deadlineTime = null,
             isCompleted = false,
             creationTime = 1683540399527,
@@ -111,7 +111,7 @@ object TestItems {
         TodoItemDto(
             id = "12",
             body = "Погладить кошку",
-            importance = "MEDIUM",
+            importance = "NO",
             deadlineTime = null,
             isCompleted = false,
             creationTime = 1683540399527,
