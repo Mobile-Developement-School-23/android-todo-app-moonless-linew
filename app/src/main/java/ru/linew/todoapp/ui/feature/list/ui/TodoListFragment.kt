@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.FragmentTodoListBinding
-import ru.linew.todoapp.ui.feature.list.model.TodoItem
+import ru.linew.todoapp.ui.model.TodoItem
 import ru.linew.todoapp.ui.feature.list.ui.recycler.TodoListAdapter
 import ru.linew.todoapp.ui.feature.list.ui.utils.Keys
 import ru.linew.todoapp.ui.feature.list.viewmodel.TodoListFragmentViewModel
@@ -29,6 +29,12 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         )
     }
     private val adapter = TodoListAdapter(itemClickCallback)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.todos.observeForever{
+            adapter.submitList(it)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,16 +44,10 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         }
         viewModel.setupViewModelListener()
         binding.todoList.adapter = adapter
-        viewModel.todos.observe(viewLifecycleOwner){
-            adapter.submitList(it)
-        }
         setupVisibilityButton()
+        setupNewTodoFab()
 
-//        adapter.submitList(repository.provideListOfTodo().map { it.toUiLayer() })
 
-        binding.addTodo.setOnClickListener {
-            findNavController().navigate(R.id.action_todoListFragment_to_todoAddFragment)
-        }
     }
 
     override fun onDestroyView() {
@@ -55,6 +55,12 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         exitTransition = null
         reenterTransition = null
 
+    }
+
+    private fun setupNewTodoFab(){
+        binding.addTodo.setOnClickListener {
+            findNavController().navigate(R.id.action_todoListFragment_to_todoAddFragment)
+        }
     }
     private fun setupVisibilityButton(){
         binding.visibilityIcon.apply {

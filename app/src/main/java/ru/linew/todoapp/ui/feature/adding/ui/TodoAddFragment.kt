@@ -14,7 +14,7 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.FragmentTodoAddBinding
 import ru.linew.todoapp.ui.feature.adding.viewmodel.TodoAddFragmentViewModel
-import ru.linew.todoapp.ui.feature.list.model.Priority
+import ru.linew.todoapp.ui.model.Priority
 import ru.linew.todoapp.ui.feature.list.ui.utils.Keys
 import ru.linew.todoapp.ui.utils.toDateFormat
 
