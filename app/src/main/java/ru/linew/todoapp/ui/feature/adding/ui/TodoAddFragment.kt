@@ -3,7 +3,6 @@ package ru.linew.todoapp.ui.feature.adding.ui
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -17,15 +16,11 @@ import ru.linew.todoapp.databinding.FragmentTodoAddBinding
 import ru.linew.todoapp.ui.feature.adding.viewmodel.TodoAddFragmentViewModel
 import ru.linew.todoapp.ui.feature.list.model.Priority
 import ru.linew.todoapp.ui.feature.list.ui.utils.Keys
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
+import ru.linew.todoapp.ui.utils.toDateFormat
 
 class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
     private val binding: FragmentTodoAddBinding by viewBinding()
     private val viewModel: TodoAddFragmentViewModel by viewModels()
-
-
     private val menu by lazy {
         PopupMenu(requireContext(), binding.priority).also {
             it.inflate(R.menu.priority_menu)
@@ -63,18 +58,30 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
         }
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
+
     }
 
+
     private fun setupUi(){
+        loadItemById()
         loadFromViewModel()
-        setupNavButtons()
         setupInputBodyTextView()
         setupMakeUntilSwitch()
         setupPriorityButton()
         setupDatePicker()
+        setupNavButtons()
+    }
+    private fun loadItemById(){
+        if (arguments != null){
+            val id = arguments?.getString(Keys.TODO_ID_ARGUMENT_KEY)!!
+            viewModel.id = id
+            viewModel.loadItem(id)
+        }
     }
     private fun loadFromViewModel(){
         binding.inputBody.setText(viewModel.body)
@@ -100,13 +107,11 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
                 findNavController().navigateUp()
             }
             saveButton.setOnClickListener {
+                viewModel.addOrUpdateTodo()
                 findNavController().navigateUp()
             }
-            //завтра поправлю этот костыль
             deleteButton.setOnClickListener {
-                if (arguments != null){
-                    viewModel.deleteItem(arguments!!.getString(Keys.TODO_ID_ARGUMENT_KEY)!!)
-                }
+                viewModel.deleteItem(arguments?.getString(Keys.TODO_ID_ARGUMENT_KEY, "")!!)
                 findNavController().navigateUp()
             }
             if (arguments == null) {
@@ -117,7 +122,7 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
 
     private fun setupInputBodyTextView() {
         with(binding.inputBody) {
-            doOnTextChanged { text, start, before, count ->
+            doOnTextChanged { text, _, _, _ ->
                 viewModel.body = text.toString()
             }
         }
@@ -167,7 +172,6 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
     }
 
     private fun setMakeUntilDate(millis: Long){
-        val dataFormatter = SimpleDateFormat("dd MMMM yyyy", Locale("ru"))
-        binding.makeUntil.text = dataFormatter.format(Date(millis))
+        binding.makeUntil.text = millis.toDateFormat()
     }
 }

@@ -10,6 +10,7 @@ import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.TodoItemBinding
 import ru.linew.todoapp.ui.feature.list.model.Priority
 import ru.linew.todoapp.ui.feature.list.model.TodoItem
+import ru.linew.todoapp.ui.utils.toDateFormat
 
 class TodoListAdapter(val onTodoClick: (View, TodoItem) -> Unit) : ListAdapter<TodoItem, TodoListAdapter.ViewHolder>(ItemCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -63,6 +64,10 @@ class TodoListAdapter(val onTodoClick: (View, TodoItem) -> Unit) : ListAdapter<T
             }
             binding.root.setOnClickListener {
                 onTodoClick(binding.root, item)
+            }
+            if(item.deadlineTime != null){
+                binding.makeUntilTextView.text = item.deadlineTime.toDateFormat()
+                binding.makeUntilTextView.visibility = View.VISIBLE
             }
 
 

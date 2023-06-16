@@ -1,15 +1,14 @@
 package ru.linew.todoapp.ui.feature.list.interactor
 
-import kotlinx.coroutines.flow.Flow
 import ru.linew.todoapp.data.model.TodoItemDto
 
 interface TodoItemsRepository {
-    fun addTodo(item: TodoItemDto)
-    fun deleteTodoByObject(item: TodoItemDto)
+    var dataUpdatedCallback: () -> Unit
+
+    fun addOrUpdateTodo(item: TodoItemDto)
 
     fun deleteTodoById(id: String)
+    fun getTodoById(id: String): TodoItemDto
     fun provideListOfTodo(): List<TodoItemDto>
 
-    fun provideFlowListOfTodo(): Flow<List<TodoItemDto>>
-    fun markTodoAsCompleted(item: TodoItemDto)
 }

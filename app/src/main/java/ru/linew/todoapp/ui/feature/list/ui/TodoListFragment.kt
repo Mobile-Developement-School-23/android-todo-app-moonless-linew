@@ -5,18 +5,11 @@ import android.view.View
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.transition.MaterialElevationScale
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import ru.linew.todoapp.R
-import ru.linew.todoapp.data.mapper.toUiLayer
-import ru.linew.todoapp.data.repository.TodoItemsRepositoryImpl
 import ru.linew.todoapp.databinding.FragmentTodoListBinding
-import ru.linew.todoapp.ui.feature.list.interactor.TodoItemsRepository
 import ru.linew.todoapp.ui.feature.list.model.TodoItem
 import ru.linew.todoapp.ui.feature.list.ui.recycler.TodoListAdapter
 import ru.linew.todoapp.ui.feature.list.ui.utils.Keys
@@ -25,6 +18,7 @@ import ru.linew.todoapp.ui.feature.list.viewmodel.TodoListFragmentViewModel
 class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private val binding: FragmentTodoListBinding by viewBinding()
     private val viewModel: TodoListFragmentViewModel by viewModels()
+    private var visibilityState = true
     private val itemClickCallback: (View, TodoItem) -> Unit = { view: View, todoItem: TodoItem ->
         val extras = FragmentNavigatorExtras(view to getString(R.string.card_edit_transition))
         val bundle = Bundle().apply {
@@ -42,17 +36,27 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         view.doOnPreDraw {
             startPostponedEnterTransition()
         }
+        viewModel.setupViewModelListener()
         binding.todoList.adapter = adapter
-        lifecycleScope.launch {
-            viewModel.itemsFlow.collect{
-                adapter.submitList(it.map { it.toUiLayer() })
-            }
+        viewModel.todos.observe(viewLifecycleOwner){
+            adapter.submitList(it)
         }
+        setupVisibilityButton()
 
 //        adapter.submitList(repository.provideListOfTodo().map { it.toUiLayer() })
-        //val touchHelper = ItemTouchHelper(SwipeToDeleteCallback(requireContext()))
-        //touchHelper.attachToRecyclerView(binding.todoList)
-        var visibilityState = true
+
+        binding.addTodo.setOnClickListener {
+            findNavController().navigate(R.id.action_todoListFragment_to_todoAddFragment)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        exitTransition = null
+        reenterTransition = null
+
+    }
+    private fun setupVisibilityButton(){
         binding.visibilityIcon.apply {
             setOnClickListener {
                 visibilityState = if (!visibilityState) {
@@ -64,15 +68,5 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
                 }
             }
         }
-        binding.addTodo.setOnClickListener {
-            findNavController().navigate(R.id.action_todoListFragment_to_todoAddFragment)
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        exitTransition = null
-        reenterTransition = null
-
     }
 }

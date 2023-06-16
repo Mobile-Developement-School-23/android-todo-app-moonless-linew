@@ -3,26 +3,25 @@ package ru.linew.todoapp.data.mapper
 import ru.linew.todoapp.data.model.TodoItemDto
 import ru.linew.todoapp.ui.feature.list.model.Priority
 import ru.linew.todoapp.ui.feature.list.model.TodoItem
-import java.util.Date
 
 fun TodoItemDto.toUiLayer(): TodoItem =
     TodoItem(
         id = id,
         body = body,
-        priority = Priority.valueOf(importance),
-        deadlineTime = if (deadlineTime == null) null else Date(deadlineTime),
+        priority = Priority.valueOf(priority),
+        deadlineTime = deadlineTime,
         isCompleted = isCompleted,
-        creationTime = Date(creationTime),
-        modificationTime = if (modificationTime == null) null else Date(modificationTime)
+        creationTime = creationTime,
+        modificationTime = modificationTime
     )
 
 fun TodoItem.toDataLayer() =
     TodoItemDto(
         id = id,
         body = body,
-        importance = priority.toString(),
-        deadlineTime = if (deadlineTime == null) null else deadlineTime.time,
+        priority = priority.toString(),
+        deadlineTime = deadlineTime,
         isCompleted = isCompleted,
-        creationTime = creationTime.time,
-        modificationTime = if (modificationTime == null) null else modificationTime.time
+        creationTime = creationTime,
+        modificationTime = modificationTime
     )
