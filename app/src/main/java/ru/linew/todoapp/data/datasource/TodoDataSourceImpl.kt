@@ -1,10 +1,10 @@
 package ru.linew.todoapp.data.datasource
 
 import ru.linew.todoapp.data.model.TodoItemDto
+import ru.linew.todoapp.data.repository.datasource.TodoDataSource
 
-@Deprecated("Hardcode")
-object TodoItems {
-    val todos = mutableListOf(
+class TodoDataSourceImpl constructor(): TodoDataSource {
+    private val todos = listOf(
         TodoItemDto(
             id = "1",
             body = "Сделать ДЗ",
@@ -147,4 +147,6 @@ object TodoItems {
             modificationTime = 1234567891027
         )
     )
+
+    override fun provideTodos(): List<TodoItemDto> = todos
 }

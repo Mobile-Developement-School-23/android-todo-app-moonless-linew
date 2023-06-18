@@ -1,21 +1,33 @@
 package ru.linew.todoapp.ui.feature.adding.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import ru.linew.todoapp.data.mapper.toUiLayer
 import ru.linew.todoapp.data.model.TodoItemDto
-import ru.linew.todoapp.data.repository.TodoItemsRepositoryImpl
 import ru.linew.todoapp.ui.feature.list.repository.TodoItemsRepository
 import ru.linew.todoapp.ui.model.Priority
 import ru.linew.todoapp.ui.model.TodoItem
 import java.util.*
 
-class TodoAddFragmentViewModel: ViewModel() {
+class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository): ViewModel() {
+    @AssistedFactory
+    interface TodoAddFragmentViewModelFactory{
+        fun create(): TodoAddFragmentViewModel
+    }
+    @Suppress("UNCHECKED_CAST")
+    class Factory(private val factory: TodoAddFragmentViewModelFactory) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return factory.create() as T
+        }
+    }
+
     var id: String? = null
     var body: String = ""
     var priority: Priority = Priority.NO
     var deadlineTime: Long? = null
     var currentTodo: TodoItem? = null
-    private val repository: TodoItemsRepository = TodoItemsRepositoryImpl
     fun deleteItem(id: String){
         repository.deleteTodoById(id)
     }

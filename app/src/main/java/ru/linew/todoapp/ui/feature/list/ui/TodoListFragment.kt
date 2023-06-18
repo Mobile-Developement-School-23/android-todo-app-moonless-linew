@@ -10,14 +10,19 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.FragmentTodoListBinding
-import ru.linew.todoapp.ui.model.TodoItem
+import ru.linew.todoapp.ui.application.appComponent
 import ru.linew.todoapp.ui.feature.list.ui.recycler.TodoListAdapter
 import ru.linew.todoapp.ui.feature.list.ui.utils.Keys
 import ru.linew.todoapp.ui.feature.list.viewmodel.TodoListFragmentViewModel
+import ru.linew.todoapp.ui.model.TodoItem
 
 class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private val binding: FragmentTodoListBinding by viewBinding()
-    private val viewModel: TodoListFragmentViewModel by viewModels()
+    private val viewModel: TodoListFragmentViewModel by viewModels{
+        TodoListFragmentViewModel.Factory(
+            requireActivity().appComponent.injectTodoListFragmentViewModel()
+        )
+    }
     private var visibilityState = true
     private val itemClickCallback: (View, TodoItem) -> Unit = { view: View, todoItem: TodoItem ->
         val extras = FragmentNavigatorExtras(view to getString(R.string.card_edit_transition))

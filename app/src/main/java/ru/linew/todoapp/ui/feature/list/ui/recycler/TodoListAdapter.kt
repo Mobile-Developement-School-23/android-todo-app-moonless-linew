@@ -12,7 +12,8 @@ import ru.linew.todoapp.ui.model.Priority
 import ru.linew.todoapp.ui.model.TodoItem
 import ru.linew.todoapp.ui.utils.toDateFormat
 
-class TodoListAdapter(private val onTodoClick: (View, TodoItem) -> Unit) : ListAdapter<TodoItem, TodoListAdapter.ViewHolder>(ItemCallback) {
+class TodoListAdapter(private val onTodoClick: (View, TodoItem) -> Unit) :
+    ListAdapter<TodoItem, TodoListAdapter.ViewHolder>(ItemCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             TodoItemBinding.inflate(
@@ -31,6 +32,7 @@ class TodoListAdapter(private val onTodoClick: (View, TodoItem) -> Unit) : ListA
         androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
         fun onBind(item: TodoItem, onTodoClick: (View, TodoItem) -> Unit) {
             binding.todoBody.text = item.body
+            bindCompletionStatus(item.isCompleted)
             bindTransitionName(item.id)
             bindPriority(item.priority)
             bindCheckBox()
@@ -41,13 +43,26 @@ class TodoListAdapter(private val onTodoClick: (View, TodoItem) -> Unit) : ListA
 
         }
 
-        private fun bindMakeUntilTextView(deadlineTime: Long?){
-            if(deadlineTime != null){
+        private fun bindCompletionStatus(isCompleted: Boolean) {
+            if (isCompleted) {
+                binding.todoBody.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                binding.checkBox.isChecked = true
+
+            } else {
+                binding.todoBody.paintFlags =
+                    binding.todoBody.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                binding.checkBox.isChecked = false
+            }
+        }
+
+        private fun bindMakeUntilTextView(deadlineTime: Long?) {
+            if (deadlineTime != null) {
                 binding.makeUntilTextView.text = deadlineTime.toDateFormat()
                 binding.makeUntilTextView.visibility = View.VISIBLE
             }
         }
-        private fun bindCheckBox(){
+
+        private fun bindCheckBox() {
             binding.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
                 if (isChecked) {
                     with(binding.todoBody) {
@@ -61,10 +76,12 @@ class TodoListAdapter(private val onTodoClick: (View, TodoItem) -> Unit) : ListA
                 }
             }
         }
-        private fun bindTransitionName(id: String){
+
+        private fun bindTransitionName(id: String) {
             binding.root.transitionName = id
         }
-        private fun bindPriority(priority: Priority){
+
+        private fun bindPriority(priority: Priority) {
             when (priority) {
                 Priority.LOW -> binding.priorityIcon.apply {
                     visibility = View.VISIBLE

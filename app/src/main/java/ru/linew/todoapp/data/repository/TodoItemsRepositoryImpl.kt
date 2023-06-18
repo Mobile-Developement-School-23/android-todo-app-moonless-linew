@@ -1,13 +1,14 @@
 package ru.linew.todoapp.data.repository
 
-import ru.linew.todoapp.data.datasource.TodoItems
 import ru.linew.todoapp.data.model.TodoItemDto
+import ru.linew.todoapp.data.repository.datasource.TodoDataSource
 import ru.linew.todoapp.ui.feature.list.repository.TodoItemsRepository
+import javax.inject.Inject
 
 
-object TodoItemsRepositoryImpl: TodoItemsRepository {
+class TodoItemsRepositoryImpl @Inject constructor(private val todoDataSource: TodoDataSource): TodoItemsRepository {
     //hardcode
-    private val todos = TodoItems.todos
+    private val todos = todoDataSource.provideTodos().toMutableList()
 
     override var dataUpdatedCallback: () -> Unit = {}
     override fun addOrUpdateTodo(item: TodoItemDto) {
