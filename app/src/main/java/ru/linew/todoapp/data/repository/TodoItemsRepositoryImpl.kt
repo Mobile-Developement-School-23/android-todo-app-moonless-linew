@@ -2,11 +2,11 @@ package ru.linew.todoapp.data.repository
 
 import ru.linew.todoapp.data.model.TodoItemDto
 import ru.linew.todoapp.data.repository.datasource.TodoDataSource
-import ru.linew.todoapp.ui.feature.list.repository.TodoItemsRepository
+import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
 import javax.inject.Inject
 
 
-class TodoItemsRepositoryImpl @Inject constructor(private val todoDataSource: TodoDataSource): TodoItemsRepository {
+class TodoItemsRepositoryImpl @Inject constructor(todoDataSource: TodoDataSource): TodoItemsRepository {
     //hardcode
     private val todos = todoDataSource.provideTodos().toMutableList()
 

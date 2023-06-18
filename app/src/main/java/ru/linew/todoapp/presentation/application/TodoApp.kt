@@ -1,4 +1,4 @@
-package ru.linew.todoapp.ui.application
+package ru.linew.todoapp.presentation.application
 
 import android.app.Application
 import android.content.Context

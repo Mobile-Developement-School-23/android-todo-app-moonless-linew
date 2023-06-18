@@ -1,4 +1,4 @@
-package ru.linew.todoapp.ui.feature.list.repository
+package ru.linew.todoapp.presentation.feature.list.repository
 
 import ru.linew.todoapp.data.model.TodoItemDto
 

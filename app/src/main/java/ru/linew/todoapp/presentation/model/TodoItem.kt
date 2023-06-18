@@ -1,4 +1,4 @@
-package ru.linew.todoapp.ui.model
+package ru.linew.todoapp.presentation.model
 
 
 data class TodoItem(

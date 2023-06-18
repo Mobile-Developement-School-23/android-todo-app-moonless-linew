@@ -1,4 +1,4 @@
-package ru.linew.todoapp.ui.feature.list.ui.recycler
+package ru.linew.todoapp.presentation.feature.list.ui.recycler
 
 
 import android.content.Context

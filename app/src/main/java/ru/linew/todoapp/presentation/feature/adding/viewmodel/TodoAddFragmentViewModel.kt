@@ -1,4 +1,4 @@
-package ru.linew.todoapp.ui.feature.adding.viewmodel
+package ru.linew.todoapp.presentation.feature.adding.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -6,9 +6,9 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.linew.todoapp.data.mapper.toUiLayer
 import ru.linew.todoapp.data.model.TodoItemDto
-import ru.linew.todoapp.ui.feature.list.repository.TodoItemsRepository
-import ru.linew.todoapp.ui.model.Priority
-import ru.linew.todoapp.ui.model.TodoItem
+import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
+import ru.linew.todoapp.presentation.model.Priority
+import ru.linew.todoapp.presentation.model.TodoItem
 import java.util.*
 
 class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository): ViewModel() {

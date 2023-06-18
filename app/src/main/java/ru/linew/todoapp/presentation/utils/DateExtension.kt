@@ -1,4 +1,4 @@
-package ru.linew.todoapp.ui.utils
+package ru.linew.todoapp.presentation.utils
 
 import java.text.SimpleDateFormat
 import java.util.*

@@ -3,7 +3,7 @@ package ru.linew.todoapp.data.datasource
 import ru.linew.todoapp.data.model.TodoItemDto
 import ru.linew.todoapp.data.repository.datasource.TodoDataSource
 
-class TodoDataSourceImpl constructor(): TodoDataSource {
+class TodoDataSourceImpl: TodoDataSource {
     private val todos = listOf(
         TodoItemDto(
             id = "1",

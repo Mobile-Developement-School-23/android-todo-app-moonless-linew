@@ -1,4 +1,4 @@
-package ru.linew.todoapp.ui.activity
+package ru.linew.todoapp.presentation.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

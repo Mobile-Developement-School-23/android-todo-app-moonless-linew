@@ -1,4 +1,4 @@
-package ru.linew.todoapp.ui.feature.list.ui.recycler
+package ru.linew.todoapp.presentation.feature.list.ui.recycler
 
 import android.graphics.Paint
 import android.view.LayoutInflater
@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.ListAdapter
 import com.google.android.material.checkbox.MaterialCheckBox
 import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.TodoItemBinding
-import ru.linew.todoapp.ui.model.Priority
-import ru.linew.todoapp.ui.model.TodoItem
-import ru.linew.todoapp.ui.utils.toDateFormat
+import ru.linew.todoapp.presentation.model.Priority
+import ru.linew.todoapp.presentation.model.TodoItem
+import ru.linew.todoapp.presentation.utils.toDateFormat
 
 class TodoListAdapter(private val onTodoClick: (View, TodoItem) -> Unit) :
     ListAdapter<TodoItem, TodoListAdapter.ViewHolder>(ItemCallback) {

@@ -4,8 +4,8 @@ import dagger.Component
 import ru.linew.todoapp.di.module.ApplicationModule
 import ru.linew.todoapp.di.module.DataSourceModule
 import ru.linew.todoapp.di.module.RepositoryModule
-import ru.linew.todoapp.ui.feature.adding.viewmodel.TodoAddFragmentViewModel
-import ru.linew.todoapp.ui.feature.list.viewmodel.TodoListFragmentViewModel
+import ru.linew.todoapp.presentation.feature.adding.viewmodel.TodoAddFragmentViewModel
+import ru.linew.todoapp.presentation.feature.list.viewmodel.TodoListFragmentViewModel
 import javax.inject.Singleton
 
 @Singleton

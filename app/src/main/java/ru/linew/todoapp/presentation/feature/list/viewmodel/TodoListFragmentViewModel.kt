@@ -1,4 +1,4 @@
-package ru.linew.todoapp.ui.feature.list.viewmodel
+package ru.linew.todoapp.presentation.feature.list.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.linew.todoapp.data.mapper.toUiLayer
-import ru.linew.todoapp.ui.feature.list.repository.TodoItemsRepository
-import ru.linew.todoapp.ui.model.TodoItem
+import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
+import ru.linew.todoapp.presentation.model.TodoItem
 
 class TodoListFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository): ViewModel() {
     @AssistedFactory

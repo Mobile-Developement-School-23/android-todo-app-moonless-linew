@@ -1,4 +1,4 @@
-package ru.linew.todoapp.ui.feature.adding.ui
+package ru.linew.todoapp.presentation.feature.adding.ui
 
 import android.graphics.Color
 import android.os.Bundle
@@ -13,11 +13,11 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.FragmentTodoAddBinding
-import ru.linew.todoapp.ui.application.appComponent
-import ru.linew.todoapp.ui.feature.adding.viewmodel.TodoAddFragmentViewModel
-import ru.linew.todoapp.ui.feature.list.ui.utils.Keys
-import ru.linew.todoapp.ui.model.Priority
-import ru.linew.todoapp.ui.utils.toDateFormat
+import ru.linew.todoapp.presentation.application.appComponent
+import ru.linew.todoapp.presentation.feature.adding.viewmodel.TodoAddFragmentViewModel
+import ru.linew.todoapp.presentation.feature.list.ui.utils.Keys
+import ru.linew.todoapp.presentation.model.Priority
+import ru.linew.todoapp.presentation.utils.toDateFormat
 
 class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
     private val binding: FragmentTodoAddBinding by viewBinding()

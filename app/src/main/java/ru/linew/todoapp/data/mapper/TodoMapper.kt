@@ -1,8 +1,8 @@
 package ru.linew.todoapp.data.mapper
 
 import ru.linew.todoapp.data.model.TodoItemDto
-import ru.linew.todoapp.ui.model.Priority
-import ru.linew.todoapp.ui.model.TodoItem
+import ru.linew.todoapp.presentation.model.Priority
+import ru.linew.todoapp.presentation.model.TodoItem
 
 fun TodoItemDto.toUiLayer(): TodoItem =
     TodoItem(
