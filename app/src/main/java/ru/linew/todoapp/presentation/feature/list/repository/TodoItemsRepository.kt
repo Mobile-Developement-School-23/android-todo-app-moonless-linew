@@ -1,14 +1,13 @@
 package ru.linew.todoapp.presentation.feature.list.repository
 
-import ru.linew.todoapp.data.model.TodoItemDto
+import ru.linew.todoapp.presentation.model.TodoItem
 
 interface TodoItemsRepository {
     var dataUpdatedCallback: () -> Unit
-
-    fun addOrUpdateTodo(item: TodoItemDto)
-
+    fun addTodo(item: TodoItem)
+    fun updateTodo(item: TodoItem)
     fun deleteTodoById(id: String)
-    fun getTodoById(id: String): TodoItemDto?
-    fun provideListOfTodo(): List<TodoItemDto>
+    fun getTodoById(id: String): TodoItem
+    fun provideListOfTodo(): List<TodoItem>
 
 }

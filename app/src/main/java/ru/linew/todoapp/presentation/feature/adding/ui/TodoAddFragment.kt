@@ -21,8 +21,7 @@ import ru.linew.todoapp.presentation.utils.toDateFormat
 
 class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
     private val binding: FragmentTodoAddBinding by viewBinding()
-
-    private val viewModel: TodoAddFragmentViewModel by viewModels{
+    private val viewModel: TodoAddFragmentViewModel by viewModels {
         TodoAddFragmentViewModel.Factory(
             requireActivity().appComponent.injectTodoAddFragmentViewModel()
         )
@@ -34,13 +33,15 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
             it.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.high_item -> {
-                        viewModel.priority = Priority.HIGH
+                        viewModel.currentTodo.priority = Priority.HIGH
                     }
+
                     R.id.no_item -> {
-                        viewModel.priority = Priority.NO
+                        viewModel.currentTodo.priority = Priority.NO
                     }
+
                     R.id.low_item -> {
-                        viewModel.priority = Priority.LOW
+                        viewModel.currentTodo.priority = Priority.LOW
                     }
 
                 }
@@ -55,6 +56,9 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
             .build()
     }
+    private val itemId by lazy {
+        arguments?.getString(Keys.TODO_ID_ARGUMENT_KEY)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,16 +68,13 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
         }
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
-
     }
 
 
-    private fun setupUi(){
+    private fun setupUi() {
         loadItemById()
         loadFromViewModel()
         setupInputBodyTextView()
@@ -82,27 +83,24 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
         setupDatePicker()
         setupNavButtons()
     }
-    private fun loadItemById(){
-        if (arguments != null){
-            val id = arguments?.getString(Keys.TODO_ID_ARGUMENT_KEY)!!
-            viewModel.id = id
-            viewModel.loadItem(id)
-        }
+
+    private fun loadItemById() {
+        viewModel.onCreate(itemId)
     }
-    private fun loadFromViewModel(){
-        binding.inputBody.setText(viewModel.body)
-        val priorityText = when(viewModel.priority){
+
+    private fun loadFromViewModel() {
+        binding.inputBody.setText(viewModel.currentTodo.body)
+        val priorityText = when (viewModel.currentTodo.priority) {
             Priority.LOW -> getString(R.string.low)
             Priority.NO -> getString(R.string.no)
             Priority.HIGH -> getString(R.string.high)
         }
         binding.currentPriority.text = priorityText
-        if (viewModel.deadlineTime != null){
-            setMakeUntilDate(viewModel.deadlineTime!!)
+        if (viewModel.currentTodo.deadlineTime != null) {
+            setMakeUntilDate(viewModel.currentTodo.deadlineTime!!)
             binding.makeUntil.visibility = View.VISIBLE
             binding.makeUntilSwitch.isChecked = true
-        }
-        else {
+        } else {
             binding.makeUntilSwitch.isChecked = false
         }
     }
@@ -117,7 +115,7 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
                 findNavController().navigateUp()
             }
             deleteButton.setOnClickListener {
-                viewModel.deleteItem(arguments?.getString(Keys.TODO_ID_ARGUMENT_KEY, "")!!)
+                viewModel.deleteItemClicked(arguments?.getString(Keys.TODO_ID_ARGUMENT_KEY, "")!!)
                 findNavController().navigateUp()
             }
             if (arguments == null) {
@@ -129,7 +127,7 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
     private fun setupInputBodyTextView() {
         with(binding.inputBody) {
             doOnTextChanged { text, _, _, _ ->
-                viewModel.body = text.toString()
+                viewModel.currentTodo.body = text.toString()
             }
         }
     }
@@ -142,7 +140,7 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
                     datePicker.show(parentFragmentManager, null)
                 } else {
                     binding.makeUntil.visibility = View.INVISIBLE
-                    viewModel.deadlineTime = null
+                    viewModel.currentTodo.deadlineTime = null
                 }
             }
         }
@@ -167,7 +165,7 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
                 makeUntil.visibility = View.INVISIBLE
             }
             datePicker.addOnPositiveButtonClickListener {
-                viewModel.deadlineTime = it
+                viewModel.currentTodo.deadlineTime = it
                 makeUntilSwitch.isChecked = true
                 setMakeUntilDate(it)
 
@@ -177,7 +175,7 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
         }
     }
 
-    private fun setMakeUntilDate(millis: Long){
+    private fun setMakeUntilDate(millis: Long) {
         binding.makeUntil.text = millis.toDateFormat()
     }
 }

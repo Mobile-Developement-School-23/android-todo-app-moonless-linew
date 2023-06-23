@@ -2,11 +2,11 @@ package ru.linew.todoapp.presentation.model
 
 
 data class TodoItem(
-    val id: String,
-    val body: String,
-    val priority: Priority,
-    val deadlineTime: Long?,
-    val isCompleted: Boolean,
-    val creationTime: Long,
-    val modificationTime:Long?
+    var id: String,
+    var body: String,
+    var priority: Priority,
+    var deadlineTime: Long?,
+    var isCompleted: Boolean,
+    var creationTime: Long,
+    var modificationTime:Long?
 )

@@ -32,9 +32,9 @@ class TodoListAdapter(private val onTodoClick: (View, TodoItem) -> Unit) :
         androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
         fun onBind(item: TodoItem, onTodoClick: (View, TodoItem) -> Unit) {
             binding.todoBody.text = item.body
-            bindCompletionStatus(item.isCompleted)
             bindTransitionName(item.id)
             bindPriority(item.priority)
+            bindCompletionStatus(item.isCompleted)
             bindCheckBox()
             bindMakeUntilTextView(item.deadlineTime)
             binding.root.setOnClickListener {
@@ -47,6 +47,7 @@ class TodoListAdapter(private val onTodoClick: (View, TodoItem) -> Unit) :
             if (isCompleted) {
                 binding.todoBody.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 binding.checkBox.isChecked = true
+                binding.checkBox.isErrorShown = false
 
             } else {
                 binding.todoBody.paintFlags =

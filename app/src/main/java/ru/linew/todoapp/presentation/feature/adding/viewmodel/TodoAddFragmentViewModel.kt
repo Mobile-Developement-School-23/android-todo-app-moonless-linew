@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import ru.linew.todoapp.data.mapper.toUiLayer
-import ru.linew.todoapp.data.model.TodoItemDto
+
 import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
+import ru.linew.todoapp.presentation.model.Mode
 import ru.linew.todoapp.presentation.model.Priority
 import ru.linew.todoapp.presentation.model.TodoItem
 import java.util.*
@@ -22,39 +22,35 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
             return factory.create() as T
         }
     }
+    private lateinit var mode: Mode
+    private lateinit var _currentTodo: TodoItem
+    val currentTodo: TodoItem
+    get() = _currentTodo
 
-    var id: String? = null
-    var body: String = ""
-    var priority: Priority = Priority.NO
-    var deadlineTime: Long? = null
-    var currentTodo: TodoItem? = null
-    fun deleteItem(id: String){
+    fun deleteItemClicked(id: String){
         repository.deleteTodoById(id)
     }
-    fun loadItem(id: String){
-        val todo = repository.getTodoById(id)?.toUiLayer()
-        if(todo == null){
-            this.id = null
+    fun onCreate(id: String?){
+        _currentTodo = if (id == null){
+            mode = Mode.CREATING
+            TodoItem(
+                UUID.randomUUID().toString(),
+                "",
+                Priority.NO,
+                deadlineTime = null,
+                isCompleted = false,
+                creationTime = System.currentTimeMillis(),
+                null
+            )
+        } else{
+            mode = Mode.EDITING
+            repository.getTodoById(id)
         }
-        body = todo?.body ?: ""
-        priority = todo?.priority ?: Priority.NO
-        deadlineTime = todo?.deadlineTime
-        currentTodo = todo
     }
     fun addOrUpdateTodo(){
-        var modificationTime: Long? = null
-        if (id != null){
-            modificationTime = System.currentTimeMillis()
+        when(mode){
+            Mode.CREATING -> repository.addTodo(_currentTodo)
+            Mode.EDITING -> repository.updateTodo(_currentTodo)
         }
-        repository.addOrUpdateTodo(TodoItemDto(
-            id = id ?: Random().nextInt(1000).toString(),
-            body = body,
-            priority = priority.toString(),
-            deadlineTime = deadlineTime,
-            isCompleted = false,
-            creationTime = System.currentTimeMillis(),
-            modificationTime = modificationTime
-
-        ))
     }
 }

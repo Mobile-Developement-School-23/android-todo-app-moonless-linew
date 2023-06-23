@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import ru.linew.todoapp.data.mapper.toUiLayer
 import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
 import ru.linew.todoapp.presentation.model.TodoItem
 
@@ -26,9 +25,9 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
     val todos: LiveData<List<TodoItem>>
         get() = _todos
     fun setupViewModelListener(){
-        _todos.postValue(repository.provideListOfTodo().map { it.toUiLayer() })
+        _todos.postValue(repository.provideListOfTodo())
         repository.dataUpdatedCallback = {
-            _todos.postValue(repository.provideListOfTodo().map { it.toUiLayer() })
+            _todos.postValue(repository.provideListOfTodo())
         }
     }
 }
