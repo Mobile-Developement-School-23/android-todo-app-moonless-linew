@@ -1,17 +1,15 @@
 package ru.linew.todoapp.di.module
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import ru.linew.todoapp.data.datasource.TodoDataSourceImpl
-import ru.linew.todoapp.data.repository.datasource.TodoDataSource
+import ru.linew.todoapp.data.datasource.remote.TodoRemoteDataSourceImpl
+import ru.linew.todoapp.data.repository.datasource.TodoRemoteDataSource
 
 
 @Module
-class DataSourceModule {
+interface DataSourceModule {
 
-    @Provides
-    fun provideDataSource(): TodoDataSource{
-        return TodoDataSourceImpl()
-    }
+    @Binds
+    fun bindRemoteDataSource(todoRemoteDataSourceImpl: TodoRemoteDataSourceImpl): TodoRemoteDataSource
 
 }

@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.launch
 import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
 import ru.linew.todoapp.presentation.model.TodoItem
 
@@ -25,8 +27,7 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
     val todos: LiveData<List<TodoItem>>
         get() = _todos
     fun setupViewModelListener(){
-        _todos.postValue(repository.provideListOfTodo())
-        repository.dataUpdatedCallback = {
+        viewModelScope.launch {
             _todos.postValue(repository.provideListOfTodo())
         }
     }

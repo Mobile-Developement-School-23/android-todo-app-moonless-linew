@@ -2,8 +2,10 @@ package ru.linew.todoapp.presentation.feature.adding.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.launch
 
 import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
 import ru.linew.todoapp.presentation.model.Mode
@@ -28,12 +30,14 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
     get() = _currentTodo
 
     fun deleteItemClicked(id: String){
-        repository.deleteTodoById(id)
+        viewModelScope.launch {
+            repository.deleteTodoById(id)
+        }
     }
     fun onCreate(id: String?){
-        _currentTodo = if (id == null){
+        if (id == null){
             mode = Mode.CREATING
-            TodoItem(
+            _currentTodo = TodoItem(
                 UUID.randomUUID().toString(),
                 "",
                 Priority.NO,
@@ -44,13 +48,15 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
             )
         } else{
             mode = Mode.EDITING
-            repository.getTodoById(id)
+            viewModelScope.launch {
+                _currentTodo = repository.getTodoById(id)
+            }
         }
     }
     fun addOrUpdateTodo(){
         when(mode){
-            Mode.CREATING -> repository.addTodo(_currentTodo)
-            Mode.EDITING -> repository.updateTodo(_currentTodo)
+            Mode.CREATING -> viewModelScope.launch { repository.addTodo(_currentTodo) }
+            Mode.EDITING -> viewModelScope.launch {  repository.updateTodo(_currentTodo) }
         }
     }
 }
