@@ -1,7 +1,6 @@
-package ru.linew.todoapp.data.retrofit.model
+package ru.linew.todoapp.data.network.model
 import com.google.gson.annotations.SerializedName
-import ru.linew.todoapp.presentation.model.Priority
-import ru.linew.todoapp.presentation.model.TodoItem
+import ru.linew.todoapp.data.model.TodoItemDto
 
 data class TodoItemResponse(
     @SerializedName("changed_at")
@@ -23,14 +22,23 @@ data class TodoItemResponse(
     @SerializedName("text")
     val body: String
 )
-
-fun TodoItemResponse.toUiLayer(): TodoItem =
-    TodoItem(
+fun TodoItemResponse.toDto(): TodoItemDto =
+    TodoItemDto(
         id = id,
         body = body,
-        priority = Priority.valueOf(priority),
+        priority = renamePriorityToDto(priority),
         deadlineTime = deadlineTime,
         isCompleted = isCompleted,
         creationTime = creationTime,
         modificationTime = modificationTime
     )
+
+private fun renamePriorityToDto(priority: String): String {
+    return when(priority){
+        "basic" -> "NO"
+        "low" -> "LOW"
+        "important" -> "HIGH"
+        else -> throw IllegalArgumentException()
+    }
+}
+

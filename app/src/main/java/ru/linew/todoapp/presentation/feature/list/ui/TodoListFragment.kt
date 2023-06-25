@@ -18,7 +18,7 @@ import ru.linew.todoapp.presentation.model.TodoItem
 
 class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private val binding: FragmentTodoListBinding by viewBinding()
-    private val viewModel: TodoListFragmentViewModel by viewModels{
+    private val viewModel: TodoListFragmentViewModel by viewModels {
         TodoListFragmentViewModel.Factory(
             requireActivity().appComponent.injectTodoListFragmentViewModel()
         )
@@ -36,9 +36,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private val adapter = TodoListAdapter(itemClickCallback)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.todos.observeForever{
-            adapter.submitList(it)
-        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,7 +46,13 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             startPostponedEnterTransition()
         }
         viewModel.setupViewModelListener()
+        viewModel.todos.observe(viewLifecycleOwner) {
+            binding.todoList.hideShimmer()
+            adapter.submitList(it)
+
+        }
         binding.todoList.adapter = adapter
+        binding.todoList.showShimmer()
         setupVisibilityButton()
         setupNewTodoFab()
 
@@ -62,12 +66,13 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
 
     }
 
-    private fun setupNewTodoFab(){
+    private fun setupNewTodoFab() {
         binding.addTodo.setOnClickListener {
             findNavController().navigate(R.id.action_todoListFragment_to_todoAddFragment)
         }
     }
-    private fun setupVisibilityButton(){
+
+    private fun setupVisibilityButton() {
         binding.visibilityIcon.apply {
             setOnClickListener {
                 visibilityState = if (!visibilityState) {

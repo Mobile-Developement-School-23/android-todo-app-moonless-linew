@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
@@ -13,50 +14,65 @@ import ru.linew.todoapp.presentation.model.Priority
 import ru.linew.todoapp.presentation.model.TodoItem
 import java.util.*
 
-class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository): ViewModel() {
+class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository) :
+    ViewModel() {
     @AssistedFactory
-    interface TodoAddFragmentViewModelFactory{
+    interface TodoAddFragmentViewModelFactory {
         fun create(): TodoAddFragmentViewModel
     }
+
     @Suppress("UNCHECKED_CAST")
-    class Factory(private val factory: TodoAddFragmentViewModelFactory) : ViewModelProvider.Factory {
+    class Factory(private val factory: TodoAddFragmentViewModelFactory) :
+        ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return factory.create() as T
         }
     }
-    private lateinit var mode: Mode
-    private lateinit var _currentTodo: TodoItem
-    val currentTodo: TodoItem
-    get() = _currentTodo
 
-    fun deleteItemClicked(id: String){
+    private lateinit var mode: Mode
+    private var _currentTodo: TodoItem? = null
+    val currentTodo: TodoItem
+        get() = _currentTodo!!
+
+    fun deleteItemClicked(id: String) {
         viewModelScope.launch {
             repository.deleteTodoById(id)
         }
     }
-    fun onCreate(id: String?){
-        if (id == null){
+
+    fun onCreate(id: String?) {
+        if (id == null) {
             mode = Mode.CREATING
-            _currentTodo = TodoItem(
-                UUID.randomUUID().toString(),
-                "",
-                Priority.NO,
-                deadlineTime = null,
-                isCompleted = false,
-                creationTime = System.currentTimeMillis(),
-                null
-            )
-        } else{
+            if (_currentTodo == null) {
+                _currentTodo = TodoItem(
+                    UUID.randomUUID().toString(),
+                    "",
+                    Priority.NO,
+                    deadlineTime = null,
+                    isCompleted = false,
+                    creationTime = System.currentTimeMillis(),
+                    System.currentTimeMillis()
+                )
+            }
+        } else {
             mode = Mode.EDITING
             viewModelScope.launch {
                 _currentTodo = repository.getTodoById(id)
             }
         }
     }
-    fun addOrUpdateTodo(){
-        when(mode){
-            Mode.CREATING -> viewModelScope.launch { repository.addTodo(_currentTodo) }
-            Mode.EDITING -> viewModelScope.launch {  repository.updateTodo(_currentTodo) }
+
+    fun addOrUpdateTodo() {
+        when (mode) {
+            Mode.CREATING -> viewModelScope.launch {
+                repository.addTodo(currentTodo)
+                _currentTodo = null
+            }
+
+            Mode.EDITING -> viewModelScope.launch {
+                repository.updateTodo(currentTodo)
+                _currentTodo = null
+            }
         }
     }
 }

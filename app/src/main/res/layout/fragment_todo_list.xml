@@ -66,7 +66,7 @@
         app:cardBackgroundColor="?attr/back_secondary"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.todkars.shimmer.ShimmerRecyclerView
             android:id="@+id/todoList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

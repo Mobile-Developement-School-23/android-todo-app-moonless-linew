@@ -5,7 +5,7 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.linew.todoapp.data.retrofit.TodoApiService
+import ru.linew.todoapp.data.network.TodoApiService
 import ru.linew.todoapp.shared.Api
 import javax.inject.Singleton
 

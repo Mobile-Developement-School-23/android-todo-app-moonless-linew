@@ -1,4 +1,4 @@
-package ru.linew.todoapp.data.retrofit.model
+package ru.linew.todoapp.data.network.model
 import com.google.gson.annotations.SerializedName
 
 data class TodoListResponse(

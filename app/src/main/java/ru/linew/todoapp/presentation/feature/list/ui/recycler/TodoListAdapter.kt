@@ -58,7 +58,7 @@ class TodoListAdapter(private val onTodoClick: (View, TodoItem) -> Unit) :
 
         private fun bindMakeUntilTextView(deadlineTime: Long?) {
             if (deadlineTime != null) {
-                binding.makeUntilTextView.text = deadlineTime.toDateFormat()
+                binding.makeUntilTextView.text = (deadlineTime).toDateFormat()
                 binding.makeUntilTextView.visibility = View.VISIBLE
             }
         }

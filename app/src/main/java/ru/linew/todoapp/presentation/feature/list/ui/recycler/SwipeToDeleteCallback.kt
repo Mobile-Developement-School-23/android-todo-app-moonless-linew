@@ -2,7 +2,11 @@ package ru.linew.todoapp.presentation.feature.list.ui.recycler
 
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
