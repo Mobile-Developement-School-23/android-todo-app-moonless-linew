@@ -1,5 +1,6 @@
 package ru.linew.todoapp.data.datasource.remote
 
+import android.provider.Settings
 import ru.linew.todoapp.data.model.TodoItemData
 import ru.linew.todoapp.data.model.toResponse
 import ru.linew.todoapp.data.repository.datasource.remote.RemoteDataSource
@@ -23,12 +24,32 @@ class RemoteDataSourceImpl @Inject constructor(
     override suspend fun addTodo(revision: Int, todoItemData: TodoItemData) {
         apiService.addTodo(
             sharedPreferencesDataSource.getLocalCurrentRevision(),
-            TodoItemContainer(todoItemData.toResponse())
+            TodoItemContainer(
+                todoItemData.toResponse()
+                    .copy(lastUpdatedBy = sharedPreferencesDataSource.getDeviceId())
+            )
         )
     }
 
     override suspend fun getRemoteCurrentRevision(): Int {
         return apiService.getTodoList().revision.toInt()
     }
+
+    override suspend fun updateTodo(todoItemData: TodoItemData) {
+        val itemToSend = TodoItemContainer(
+            todoItemData.toResponse()
+                .copy(lastUpdatedBy = sharedPreferencesDataSource.getDeviceId())
+        )
+        apiService.updateTodoById(
+            sharedPreferencesDataSource.getLocalCurrentRevision(),
+            itemToSend.element.id,
+            itemToSend
+        )
+    }
+
+    override suspend fun deleteTodoById(id: String) {
+        apiService.deleteTodoById(sharedPreferencesDataSource.getLocalCurrentRevision(), id)
+    }
+
 
 }

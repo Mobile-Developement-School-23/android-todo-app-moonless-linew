@@ -9,4 +9,8 @@ interface RemoteDataSource {
     suspend fun addTodo(revision:Int, todoItemData: TodoItemData)
 
     suspend fun getRemoteCurrentRevision(): Int
+
+    suspend fun updateTodo(todoItemData: TodoItemData)
+
+    suspend fun deleteTodoById(id: String)
 }

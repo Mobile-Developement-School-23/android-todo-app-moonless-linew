@@ -33,5 +33,9 @@ class SharedPreferencesDataSourceImpl @Inject constructor(private val sharedPref
     override fun getFlagNeedSyncState(): Boolean =
         sharedPreferences.getBoolean(Constants.SHARED_PREFERENCES_SYNC_FLAG_KEY, true)
 
+    override fun getDeviceId(): String =
+        sharedPreferences.getString(Constants.SHARED_PREFERENCES_UNIQUE_ID_KEY, "null")!!
+
+
 
 }

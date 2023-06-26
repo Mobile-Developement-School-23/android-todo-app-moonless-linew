@@ -14,17 +14,16 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.transition.platform.MaterialContainerTransform
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.FragmentTodoAddBinding
 import ru.linew.todoapp.presentation.application.appComponent
 import ru.linew.todoapp.presentation.feature.adding.viewmodel.TodoAddFragmentViewModel
 import ru.linew.todoapp.presentation.feature.adding.viewmodel.state.Result
-import ru.linew.todoapp.presentation.feature.list.ui.utils.Keys
 import ru.linew.todoapp.presentation.model.Priority
 import ru.linew.todoapp.presentation.model.TodoItem
 import ru.linew.todoapp.presentation.utils.toDateFormat
+import ru.linew.todoapp.shared.Constants
 
 class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
     private val binding: FragmentTodoAddBinding by viewBinding()
@@ -64,7 +63,7 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
             .build()
     }
     private val itemId by lazy {
-        arguments?.getString(Keys.TODO_ID_ARGUMENT_KEY)
+        arguments?.getString(Constants.TODO_ID_ARGUMENT_KEY)
     }
 
 
@@ -128,7 +127,7 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
                 findNavController().navigateUp()
             }
             deleteButton.setOnClickListener {
-                viewModel.deleteItemClicked(arguments?.getString(Keys.TODO_ID_ARGUMENT_KEY, "")!!)
+                viewModel.deleteItemClicked(arguments?.getString(Constants.TODO_ID_ARGUMENT_KEY, "")!!)
                 findNavController().navigateUp()
             }
             if (arguments == null) {

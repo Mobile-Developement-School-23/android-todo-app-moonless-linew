@@ -1,5 +1,7 @@
 package ru.linew.todoapp.data.model
 
+import android.provider.Settings
+import android.provider.Settings.Secure
 import ru.linew.todoapp.data.db.model.TodoItemEntity
 import ru.linew.todoapp.data.network.model.TodoItemResponse
 import ru.linew.todoapp.presentation.model.Priority
@@ -35,9 +37,9 @@ fun TodoItemData.toResponse(): TodoItemResponse =
         creationTime = creationTime,
         modificationTime = modificationTime,
         color = null,
-        lastUpdatedBy = "id1"
+        lastUpdatedBy = ""
     )
-//заглушка
+
 
 fun TodoItemData.toEntity(): TodoItemEntity =
     TodoItemEntity(

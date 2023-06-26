@@ -7,7 +7,7 @@ import ru.linew.todoapp.data.db.model.toDto
 import ru.linew.todoapp.data.model.toEntity
 import javax.inject.Inject
 
-class LocalDataSourceImpl @Inject constructor(private val todoDao: TodoDao): LocalDataSource {
+class LocalDataSourceImpl @Inject constructor(private val todoDao: TodoDao) : LocalDataSource {
     override suspend fun getListOfTodos(): List<TodoItemData> {
         return todoDao.getListOfTodos().map { it.toDto() }
     }
@@ -25,8 +25,9 @@ class LocalDataSourceImpl @Inject constructor(private val todoDao: TodoDao): Loc
         todoDao.addListOfTodos(todoItemList.map { it.toEntity() })
     }
 
-    override suspend fun removeTodo(todoItem: TodoItemData) {
-        todoDao.deleteTodo(todoItem.toEntity())
+    override suspend fun deleteTodoById(id: String) {
+        todoDao.deleteTodoById(id)
+
     }
 
     override suspend fun updateTodo(todoItem: TodoItemData) {

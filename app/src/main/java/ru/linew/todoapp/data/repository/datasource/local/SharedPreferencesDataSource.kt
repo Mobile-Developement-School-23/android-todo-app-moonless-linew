@@ -7,4 +7,5 @@ interface SharedPreferencesDataSource {
     fun flagNeedSyncUp()
     fun flagNeedSyncDown()
     fun getFlagNeedSyncState(): Boolean
+    fun getDeviceId(): String
 }

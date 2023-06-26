@@ -10,7 +10,7 @@ interface LocalDataSource {
 
     suspend fun addListOfTodos(todoItemList: List<TodoItemData>)
 
-    suspend fun removeTodo(todoItem: TodoItemData)
+    suspend fun deleteTodoById(id: String)
 
     suspend fun updateTodo(todoItem: TodoItemData)
 }

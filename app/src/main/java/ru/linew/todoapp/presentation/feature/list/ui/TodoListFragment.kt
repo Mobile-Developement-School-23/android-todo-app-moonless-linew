@@ -12,9 +12,9 @@ import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.FragmentTodoListBinding
 import ru.linew.todoapp.presentation.application.appComponent
 import ru.linew.todoapp.presentation.feature.list.ui.recycler.TodoListAdapter
-import ru.linew.todoapp.presentation.feature.list.ui.utils.Keys
 import ru.linew.todoapp.presentation.feature.list.viewmodel.TodoListFragmentViewModel
 import ru.linew.todoapp.presentation.model.TodoItem
+import ru.linew.todoapp.shared.Constants
 
 class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private val binding: FragmentTodoListBinding by viewBinding()
@@ -27,7 +27,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private val itemClickCallback: (View, TodoItem) -> Unit = { view: View, todoItem: TodoItem ->
         val extras = FragmentNavigatorExtras(view to getString(R.string.card_edit_transition))
         val bundle = Bundle().apply {
-            putString(Keys.TODO_ID_ARGUMENT_KEY, todoItem.id)
+            putString(Constants.TODO_ID_ARGUMENT_KEY, todoItem.id)
         }
         findNavController().navigate(
             R.id.action_todoListFragment_to_todoAddFragment, bundle, null, extras

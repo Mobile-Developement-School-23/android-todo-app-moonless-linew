@@ -38,7 +38,8 @@ interface TodoApiService {
 
     @DELETE("list/{id}")
     suspend fun deleteTodoById(
-        @Header("X-Last-Known-Revision") revision: Int
+        @Header("X-Last-Known-Revision") revision: Int,
+        @Path("id") id: String
     )
 
 }

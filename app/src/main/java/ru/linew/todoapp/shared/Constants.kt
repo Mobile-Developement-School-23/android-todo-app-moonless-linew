@@ -5,4 +5,7 @@ object Constants {
     const val SHARED_PREFERENCES_NAME = "MAIN"
     const val SHARED_PREFERENCES_REVISION_KEY = "revision"
     const val SHARED_PREFERENCES_SYNC_FLAG_KEY = "update_flag"
+    const val SHARED_PREFERENCES_UNIQUE_ID_KEY = "device_id"
+
+    const val TODO_ID_ARGUMENT_KEY = "id"
 }
