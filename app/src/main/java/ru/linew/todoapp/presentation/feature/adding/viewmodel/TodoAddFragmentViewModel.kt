@@ -5,13 +5,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
 import ru.linew.todoapp.presentation.model.Mode
 import ru.linew.todoapp.presentation.model.Priority
 import ru.linew.todoapp.presentation.model.TodoItem
+import ru.linew.todoapp.presentation.feature.adding.viewmodel.state.Result
 import java.util.*
 
 class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository) :
@@ -28,11 +30,24 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
             return factory.create() as T
         }
     }
-
     private lateinit var mode: Mode
-    private var _currentTodo: TodoItem? = null
-    val currentTodo: TodoItem
-        get() = _currentTodo!!
+
+    private val _currentTodo = MutableStateFlow<Result<TodoItem>>(Result.Loading)
+    val currentTodo: StateFlow<Result<TodoItem>> = _currentTodo
+
+    fun todoBodyTextChanged(body: String){
+        if(currentTodo.value is Result.Complete)
+            (currentTodo.value as Result.Complete<TodoItem>).result.body = body
+    }
+    fun todoPriorityChanged(priority: Priority){
+        if(currentTodo.value is Result.Complete)
+            (currentTodo.value as Result.Complete<TodoItem>).result.priority = priority
+    }
+
+    fun todoDeadlineTimeChanged(deadlineTime: Long?){
+        if(currentTodo.value is Result.Complete)
+            (currentTodo.value as Result.Complete<TodoItem>).result.deadlineTime = deadlineTime
+    }
 
     fun deleteItemClicked(id: String) {
         viewModelScope.launch {
@@ -43,8 +58,8 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
     fun onCreate(id: String?) {
         if (id == null) {
             mode = Mode.CREATING
-            if (_currentTodo == null) {
-                _currentTodo = TodoItem(
+            if (_currentTodo.value is Result.Loading) {
+                _currentTodo.value = Result.Complete(TodoItem(
                     UUID.randomUUID().toString(),
                     "",
                     Priority.NO,
@@ -52,12 +67,13 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
                     isCompleted = false,
                     creationTime = System.currentTimeMillis(),
                     System.currentTimeMillis()
-                )
+                ))
             }
         } else {
             mode = Mode.EDITING
             viewModelScope.launch {
-                _currentTodo = repository.getTodoById(id)
+                _currentTodo.value = Result.Complete(repository.getTodoById(id))
+
             }
         }
     }
@@ -65,13 +81,13 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
     fun addOrUpdateTodo() {
         when (mode) {
             Mode.CREATING -> viewModelScope.launch {
-                repository.addTodo(currentTodo)
-                _currentTodo = null
+                repository.addTodo((currentTodo.value as Result.Complete).result)
+                _currentTodo.value = Result.Loading
             }
 
             Mode.EDITING -> viewModelScope.launch {
-                repository.updateTodo(currentTodo)
-                _currentTodo = null
+                repository.updateTodo((currentTodo.value as Result.Complete).result)
+                _currentTodo.value = Result.Loading
             }
         }
     }

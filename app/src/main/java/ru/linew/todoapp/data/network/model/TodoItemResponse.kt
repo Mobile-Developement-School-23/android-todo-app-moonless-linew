@@ -1,6 +1,6 @@
 package ru.linew.todoapp.data.network.model
 import com.google.gson.annotations.SerializedName
-import ru.linew.todoapp.data.model.TodoItemDto
+import ru.linew.todoapp.data.model.TodoItemData
 
 data class TodoItemResponse(
     @SerializedName("changed_at")
@@ -22,18 +22,18 @@ data class TodoItemResponse(
     @SerializedName("text")
     val body: String
 )
-fun TodoItemResponse.toDto(): TodoItemDto =
-    TodoItemDto(
+fun TodoItemResponse.toDto(): TodoItemData =
+    TodoItemData(
         id = id,
         body = body,
-        priority = renamePriorityToDto(priority),
+        priority = renamePriorityToData(priority),
         deadlineTime = deadlineTime,
         isCompleted = isCompleted,
         creationTime = creationTime,
         modificationTime = modificationTime
     )
 
-private fun renamePriorityToDto(priority: String): String {
+private fun renamePriorityToData(priority: String): String {
     return when(priority){
         "basic" -> "NO"
         "low" -> "LOW"

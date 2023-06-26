@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.linew.todoapp.data.network.TodoApiService
-import ru.linew.todoapp.shared.Api
+import ru.linew.todoapp.shared.Constants
 import javax.inject.Singleton
 
 @Module
@@ -16,7 +16,7 @@ class ApiModule {
     fun provideRetrofitClient(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit
             .Builder()
-            .baseUrl(Api.BASE_URL)
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()

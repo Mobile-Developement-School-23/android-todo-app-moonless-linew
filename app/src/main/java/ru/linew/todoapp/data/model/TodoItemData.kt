@@ -1,10 +1,11 @@
 package ru.linew.todoapp.data.model
 
+import ru.linew.todoapp.data.db.model.TodoItemEntity
 import ru.linew.todoapp.data.network.model.TodoItemResponse
 import ru.linew.todoapp.presentation.model.Priority
 import ru.linew.todoapp.presentation.model.TodoItem
 
-data class TodoItemDto(
+data class TodoItemData(
     val id: String,
     val body: String,
     val priority: String,
@@ -13,7 +14,7 @@ data class TodoItemDto(
     val creationTime: Long,
     val modificationTime:Long
 )
-fun TodoItemDto.toUi(): TodoItem =
+fun TodoItemData.toUi(): TodoItem =
     TodoItem(
         id = id,
         body = body,
@@ -24,7 +25,7 @@ fun TodoItemDto.toUi(): TodoItem =
         modificationTime = modificationTime
     )
 
-fun TodoItemDto.toResponse(): TodoItemResponse =
+fun TodoItemData.toResponse(): TodoItemResponse =
     TodoItemResponse(
         id = id,
         body = body,
@@ -37,6 +38,17 @@ fun TodoItemDto.toResponse(): TodoItemResponse =
         lastUpdatedBy = "id1"
     )
 //заглушка
+
+fun TodoItemData.toEntity(): TodoItemEntity =
+    TodoItemEntity(
+        id = id,
+        body = body,
+        priority = priority,
+        deadlineTime = deadlineTime,
+        isCompleted = isCompleted,
+        creationTime = creationTime,
+        modificationTime = modificationTime
+    )
 
 private fun renamePriorityToResponse(priority: String): String {
     return when(priority){

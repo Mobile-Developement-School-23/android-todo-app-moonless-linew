@@ -1,6 +1,6 @@
 package ru.linew.todoapp.presentation.model
 
-import ru.linew.todoapp.data.model.TodoItemDto
+import ru.linew.todoapp.data.model.TodoItemData
 
 
 data class TodoItem(
@@ -13,8 +13,8 @@ data class TodoItem(
     var modificationTime:Long
 )
 
-fun TodoItem.toDto(): TodoItemDto{
-    return TodoItemDto(
+fun TodoItem.toDto(): TodoItemData{
+    return TodoItemData(
         id = id,
         body = body,
         priority = priority.toString(),

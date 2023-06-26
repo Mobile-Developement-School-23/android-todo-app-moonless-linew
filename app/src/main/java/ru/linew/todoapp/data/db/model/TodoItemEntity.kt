@@ -2,7 +2,7 @@ package ru.linew.todoapp.data.db.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ru.linew.todoapp.data.model.TodoItemDto
+import ru.linew.todoapp.data.model.TodoItemData
 
 @Entity(tableName = "todos")
 data class TodoItemEntity(
@@ -16,8 +16,8 @@ data class TodoItemEntity(
     val modificationTime: Long
 )
 
-fun TodoItemEntity.toDto(): TodoItemDto =
-    TodoItemDto(
+fun TodoItemEntity.toDto(): TodoItemData =
+    TodoItemData(
         id = id,
         body = body,
         priority = priority,

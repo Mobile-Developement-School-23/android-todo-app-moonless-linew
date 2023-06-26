@@ -28,7 +28,7 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
         get() = _todos
     fun setupViewModelListener(){
         viewModelScope.launch {
-            _todos.postValue(repository.provideListOfTodo())
+            _todos.postValue(repository.getListOfTodo())
         }
     }
 }

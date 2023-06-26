@@ -24,7 +24,6 @@
         android:tint="@color/label_light_tertiary"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/info_outline"
