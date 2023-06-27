@@ -1,7 +1,5 @@
 package ru.linew.todoapp.data.model
 
-import android.provider.Settings
-import android.provider.Settings.Secure
 import ru.linew.todoapp.data.db.model.TodoItemEntity
 import ru.linew.todoapp.data.network.model.TodoItemResponse
 import ru.linew.todoapp.presentation.model.Priority

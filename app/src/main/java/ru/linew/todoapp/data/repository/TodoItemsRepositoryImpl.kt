@@ -21,7 +21,8 @@ class TodoItemsRepositoryImpl @Inject constructor(
     override suspend fun addTodo(todoItem: TodoItem) {
         try {
             remoteDataSource.addTodo(sharedPreferencesDataSource.getLocalCurrentRevision(),todoItem.toDto())
-        }catch (e: UnknownHostException){
+        }
+        catch (e: UnknownHostException){
             localDataSource.addTodo(todoItem.toDto())
             sharedPreferencesDataSource.flagNeedSyncUp()
         }
@@ -32,10 +33,14 @@ class TodoItemsRepositoryImpl @Inject constructor(
         try {
             remoteDataSource.updateTodo(todoItem.toDto())
             localDataSource.updateTodo(todoItem.toDto())
+
         }
         catch (e: UnknownHostException){
             localDataSource.updateTodo(todoItem.toDto())
             sharedPreferencesDataSource.flagNeedSyncUp()
+        }
+        finally {
+            sharedPreferencesDataSource.incrementCurrentRevision()
         }
     }
 
@@ -43,7 +48,8 @@ class TodoItemsRepositoryImpl @Inject constructor(
         try {
             remoteDataSource.deleteTodoById(id)
             localDataSource.deleteTodoById(id)
-        } catch (e: UnknownHostException){
+        }
+        catch (e: UnknownHostException){
             localDataSource.deleteTodoById(id)
             sharedPreferencesDataSource.flagNeedSyncUp()
         }

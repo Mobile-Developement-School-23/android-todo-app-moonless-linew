@@ -31,4 +31,11 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
             _todos.postValue(repository.getListOfTodo())
         }
     }
+
+    fun todoCompleteStatusChanged(todoItem: TodoItem){
+        viewModelScope.launch {
+            repository.updateTodo(todoItem)
+        }
+    }
+
 }

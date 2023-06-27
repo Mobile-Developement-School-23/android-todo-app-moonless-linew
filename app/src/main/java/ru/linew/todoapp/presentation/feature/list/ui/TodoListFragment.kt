@@ -33,10 +33,22 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             R.id.action_todoListFragment_to_todoAddFragment, bundle, null, extras
         )
     }
-    private val adapter = TodoListAdapter(itemClickCallback)
+    private val checkBoxChangedCallback: (Boolean, TodoItem) -> Unit = { isCompleted, todoItem ->
+        todoItem.isCompleted = isCompleted
+        viewModel.todoCompleteStatusChanged(todoItem)
+    }
+    private val adapter = TodoListAdapter(itemClickCallback, checkBoxChangedCallback)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.todos.observe(viewLifecycleOwner) {
+            binding.todoList.hideShimmer()
+            adapter.submitList(it)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,11 +58,6 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             startPostponedEnterTransition()
         }
         viewModel.setupViewModelListener()
-        viewModel.todos.observe(viewLifecycleOwner) {
-            binding.todoList.hideShimmer()
-            adapter.submitList(it)
-
-        }
         binding.todoList.adapter = adapter
         binding.todoList.showShimmer()
         setupVisibilityButton()

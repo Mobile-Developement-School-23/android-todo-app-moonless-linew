@@ -1,10 +1,10 @@
 package ru.linew.todoapp.data.datasource.local
 
-import ru.linew.todoapp.data.model.TodoItemData
-import ru.linew.todoapp.data.repository.datasource.local.LocalDataSource
 import ru.linew.todoapp.data.db.TodoDao
 import ru.linew.todoapp.data.db.model.toDto
+import ru.linew.todoapp.data.model.TodoItemData
 import ru.linew.todoapp.data.model.toEntity
+import ru.linew.todoapp.data.repository.datasource.local.LocalDataSource
 import javax.inject.Inject
 
 class LocalDataSourceImpl @Inject constructor(private val todoDao: TodoDao) : LocalDataSource {

@@ -1,13 +1,12 @@
 package ru.linew.todoapp.data.datasource.remote
 
-import android.provider.Settings
 import ru.linew.todoapp.data.model.TodoItemData
 import ru.linew.todoapp.data.model.toResponse
-import ru.linew.todoapp.data.repository.datasource.remote.RemoteDataSource
 import ru.linew.todoapp.data.network.TodoApiService
 import ru.linew.todoapp.data.network.model.send.TodoItemContainer
 import ru.linew.todoapp.data.network.model.toDto
 import ru.linew.todoapp.data.repository.datasource.local.SharedPreferencesDataSource
+import ru.linew.todoapp.data.repository.datasource.remote.RemoteDataSource
 import javax.inject.Inject
 
 class RemoteDataSourceImpl @Inject constructor(
