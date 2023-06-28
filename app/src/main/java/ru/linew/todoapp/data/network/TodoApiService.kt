@@ -34,7 +34,7 @@ interface TodoApiService {
         @Header("X-Last-Known-Revision") revision: Int,
         @Path("id") id: String,
         @Body element: TodoItemContainer
-    )
+    ): TodoSingleResponse
 
     @DELETE("list/{id}")
     suspend fun deleteTodoById(

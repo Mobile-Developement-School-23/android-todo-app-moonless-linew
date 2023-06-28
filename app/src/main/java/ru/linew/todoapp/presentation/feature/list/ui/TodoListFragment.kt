@@ -33,6 +33,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             R.id.action_todoListFragment_to_todoAddFragment, bundle, null, extras
         )
     }
+    //в onPause
     private val checkBoxChangedCallback: (Boolean, TodoItem) -> Unit = { isCompleted, todoItem ->
         todoItem.isCompleted = isCompleted
         viewModel.todoCompleteStatusChanged(todoItem)

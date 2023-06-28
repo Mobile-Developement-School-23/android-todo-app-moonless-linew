@@ -8,6 +8,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import ru.linew.todoapp.presentation.feature.adding.viewmodel.state.EditStatus
 import ru.linew.todoapp.presentation.feature.adding.viewmodel.state.Result
 import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
 import ru.linew.todoapp.presentation.model.Mode
@@ -34,6 +35,9 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
     private val _currentTodo = MutableStateFlow<Result<TodoItem>>(Result.Loading)
     val currentTodo: StateFlow<Result<TodoItem>> = _currentTodo
 
+    private val _currentEditStatus = MutableStateFlow<EditStatus>(EditStatus.InProcess)
+    val currentEditStatus: StateFlow<EditStatus> = _currentEditStatus
+
     fun todoBodyTextChanged(body: String){
         if(currentTodo.value is Result.Complete)
             (currentTodo.value as Result.Complete<TodoItem>).result.body = body
@@ -48,9 +52,10 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
             (currentTodo.value as Result.Complete<TodoItem>).result.deadlineTime = deadlineTime
     }
 
-    fun deleteItemClicked(id: String) {
+    fun deleteButtonClicked(id: String) {
         viewModelScope.launch {
             repository.deleteTodoById(id)
+            _currentEditStatus.value = EditStatus.Deleted
         }
     }
 
@@ -77,17 +82,20 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
         }
     }
 
-    fun addOrUpdateTodo() {
+    fun saveButtonClicked() {
         when (mode) {
             Mode.CREATING -> viewModelScope.launch {
                 repository.addTodo((currentTodo.value as Result.Complete).result)
+                _currentEditStatus.value = EditStatus.Created
                 _currentTodo.value = Result.Loading
             }
 
             Mode.EDITING -> viewModelScope.launch {
                 repository.updateTodo((currentTodo.value as Result.Complete).result)
+                _currentEditStatus.value = EditStatus.Updated
                 _currentTodo.value = Result.Loading
             }
         }
+
     }
 }

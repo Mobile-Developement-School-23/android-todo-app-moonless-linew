@@ -22,7 +22,7 @@ data class TodoItemResponse(
     @SerializedName("text")
     val body: String
 )
-fun TodoItemResponse.toDto(): TodoItemData =
+fun TodoItemResponse.toData(): TodoItemData =
     TodoItemData(
         id = id,
         body = body,

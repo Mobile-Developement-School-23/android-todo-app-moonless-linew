@@ -19,6 +19,7 @@ import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.FragmentTodoAddBinding
 import ru.linew.todoapp.presentation.application.appComponent
 import ru.linew.todoapp.presentation.feature.adding.viewmodel.TodoAddFragmentViewModel
+import ru.linew.todoapp.presentation.feature.adding.viewmodel.state.EditStatus
 import ru.linew.todoapp.presentation.feature.adding.viewmodel.state.Result
 import ru.linew.todoapp.presentation.model.Priority
 import ru.linew.todoapp.presentation.model.TodoItem
@@ -82,6 +83,18 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
                 }
 
             }
+
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.currentEditStatus.collect{
+                    when(it){
+                        EditStatus.InProcess -> {}
+                        else -> findNavController().navigateUp()
+                    }
+
+                }
+            }
         }
     }
 
@@ -123,12 +136,10 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
                 findNavController().navigateUp()
             }
             saveButton.setOnClickListener {
-                viewModel.addOrUpdateTodo()
-                findNavController().navigateUp()
+                viewModel.saveButtonClicked()
             }
             deleteButton.setOnClickListener {
-                viewModel.deleteItemClicked(arguments?.getString(Constants.TODO_ID_ARGUMENT_KEY, "")!!)
-                findNavController().navigateUp()
+                viewModel.deleteButtonClicked(arguments?.getString(Constants.TODO_ID_ARGUMENT_KEY, "")!!)
             }
             if (arguments == null) {
                 binding.deleteButton.visibility = View.INVISIBLE
