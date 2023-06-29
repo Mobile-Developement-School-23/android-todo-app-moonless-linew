@@ -3,6 +3,9 @@ package ru.linew.todoapp.presentation.application
 import android.app.Application
 import android.content.Context
 import androidx.work.Configuration
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
@@ -25,8 +28,17 @@ class TodoApp : Application(), Configuration.Provider {
             .applicationModule(ApplicationModule(context = applicationContext))
             .build()
         appComponent.injectApplication(this)
-//        val uploadWorkRequest = PeriodicWorkRequestBuilder<BackgroundWorkerClass>(8, TimeUnit.HOURS).build()
-//        WorkManager.getInstance(this).enqueue(uploadWorkRequest)
+        val constraints =
+            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val uploadWorkRequest =
+            PeriodicWorkRequestBuilder<BackgroundWorkerClass>(8, TimeUnit.HOURS).setConstraints(
+                constraints
+            ).build()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "LocalUpdater",
+            ExistingPeriodicWorkPolicy.KEEP,
+            uploadWorkRequest
+        )
     }
 
     override fun getWorkManagerConfiguration(): Configuration {

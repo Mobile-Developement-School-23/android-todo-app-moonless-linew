@@ -48,7 +48,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         }
     }
 
-    //в onPause и добавить debounce
+    //в onPause или добавить debounce
     private val checkBoxChangedCallback: (Boolean, TodoItem) -> Unit = { isCompleted, todoItem ->
         todoItem.isCompleted = isCompleted
         viewModel.todoCompleteStatusChanged(todoItem)
@@ -64,7 +64,12 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
                     binding.todoList.hideShimmer()
                     binding.completedCounter.text =
                         getString(R.string.completed, it.result.count { item -> item.isCompleted })
-                    adapter.submitList(it.result)
+                    if(visibilityState){
+                        adapter.submitList(it.result)
+                    }
+                    else{
+                        adapter.submitList(it.result.filter {item -> !item.isCompleted })
+                    }
                 }
             }
 
