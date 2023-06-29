@@ -62,6 +62,8 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
                 Result.Null -> {}
                 is Result.Success -> {
                     binding.todoList.hideShimmer()
+                    binding.completedCounter.text =
+                        getString(R.string.completed, it.result.count { item -> item.isCompleted })
                     adapter.submitList(it.result)
                 }
             }

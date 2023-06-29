@@ -4,7 +4,7 @@
     <string name="my_todos">Мои дела</string>
     <string name="visibility">Visibility</string>
     <string name="change_visibility">Change visibility</string>
-    <string name="test_completed">Выполнено - 5</string>
+    <string name="completed">Выполнено - %1$d</string>
     <string name="save">СОХРАНИТЬ</string>
     <string name="add_todo">Add todo</string>
     <string name="priority">Важность</string>
