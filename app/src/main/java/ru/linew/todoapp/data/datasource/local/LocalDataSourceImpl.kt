@@ -36,6 +36,6 @@ class LocalDataSourceImpl @Inject constructor(private val todoDao: TodoDao) : Lo
     }
 
     override suspend fun updateTodo(todoItem: TodoItemData) {
-        todoDao.updateTodo(todoItem.toEntity())
+        todoDao.updateTodo(todoItem.toEntity().copy(modificationTime = System.currentTimeMillis()))
     }
 }

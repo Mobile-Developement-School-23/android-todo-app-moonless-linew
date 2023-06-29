@@ -1,5 +1,6 @@
 package ru.linew.todoapp.di.component
 
+import android.app.Application
 import dagger.Component
 import ru.linew.todoapp.di.module.ApiModule
 import ru.linew.todoapp.di.module.ApplicationModule
@@ -8,6 +9,7 @@ import ru.linew.todoapp.di.module.DataBaseModule
 import ru.linew.todoapp.di.module.DataSourceModule
 import ru.linew.todoapp.di.module.RepositoryModule
 import ru.linew.todoapp.presentation.activity.MainActivity
+import ru.linew.todoapp.presentation.application.TodoApp
 import ru.linew.todoapp.presentation.feature.adding.viewmodel.TodoAddFragmentViewModel
 import ru.linew.todoapp.presentation.feature.list.viewmodel.TodoListFragmentViewModel
 import javax.inject.Singleton
@@ -17,6 +19,7 @@ import javax.inject.Singleton
     ApiModule::class, DataSourceModule::class, DataBaseModule::class])
 interface AppComponent {
 
+    fun injectApplication(application: TodoApp)
     fun injectMainActivity(activity: MainActivity)
     fun injectTodoListFragmentViewModel(): TodoListFragmentViewModel.TodoListFragmentViewModelFactory
 

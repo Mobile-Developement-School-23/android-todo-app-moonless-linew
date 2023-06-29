@@ -41,7 +41,10 @@ class RemoteDataSourceImpl @Inject constructor(
     override suspend fun updateTodo(todoItemData: TodoItemData) {
         val itemToSend = TodoItemContainer(
             todoItemData.toResponse()
-                .copy(lastUpdatedBy = sharedPreferencesDataSource.getDeviceId())
+                .copy(
+                    lastUpdatedBy = sharedPreferencesDataSource.getDeviceId(),
+                    modificationTime = System.currentTimeMillis()
+                )
         )
         val currentRevision = apiService.updateTodoById(
             sharedPreferencesDataSource.getLocalCurrentRevision(),
@@ -64,7 +67,9 @@ class RemoteDataSourceImpl @Inject constructor(
     override suspend fun forceUpdateListOfTodos(todos: List<TodoItemData>) {
         val currentRevision = apiService.updateTodoList(
             sharedPreferencesDataSource.getLocalCurrentRevision(),
-            TodoListContainer(todos.map { it.toResponse().copy(lastUpdatedBy = sharedPreferencesDataSource.getDeviceId()) })
+            TodoListContainer(todos.map {
+                it.toResponse().copy(lastUpdatedBy = sharedPreferencesDataSource.getDeviceId())
+            })
         ).revision
         sharedPreferencesDataSource.setCurrentRevision(currentRevision.toInt())
     }

@@ -3,10 +3,14 @@ package ru.linew.todoapp.presentation.activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import ru.linew.todoapp.R
 import ru.linew.todoapp.presentation.application.appComponent
+import ru.linew.todoapp.presentation.feature.background.BackgroundWorkerClass
 import ru.linew.todoapp.shared.Constants
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -22,5 +26,7 @@ class MainActivity : AppCompatActivity() {
                 .putString(Constants.SHARED_PREFERENCES_UNIQUE_ID_KEY, UUID.randomUUID().toString())
                 .apply()
         }
+
+
     }
 }

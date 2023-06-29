@@ -32,7 +32,7 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
     private val _todos = MutableLiveData<Result>(Result.Null)
     val todos: LiveData<Result>
         get() = _todos
-    fun setupViewModelListener(){
+    fun syncList(){
         viewModelScope.launch {
             try {
                 repository.syncListOfTodo()
@@ -42,6 +42,7 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
             }finally {
                 repository.todoListFlow.collect{
                     _todos.postValue(Result.Success(it))
+
                 }
             }
 
@@ -49,10 +50,16 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
         }
     }
 
+    fun errorShowed(){
+        _errorState.postValue(ErrorState.Ok)
+    }
+
     fun todoCompleteStatusChanged(todoItem: TodoItem){
         viewModelScope.launch {
             repository.updateTodo(todoItem)
         }
     }
+
+
 
 }

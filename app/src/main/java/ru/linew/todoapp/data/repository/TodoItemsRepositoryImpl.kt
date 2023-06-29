@@ -70,7 +70,6 @@ class TodoItemsRepositoryImpl @Inject constructor(
         try {
             val remoteTodos = remoteDataSource.provideListOfTodos()
             if (sharedPreferencesDataSource.getFlagNeedSyncState()){
-
                 remoteDataSource.forceUpdateListOfTodos(localTodos)
                 sharedPreferencesDataSource.flagNeedSyncDown()
             }

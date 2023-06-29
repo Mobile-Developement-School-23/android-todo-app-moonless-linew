@@ -48,7 +48,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         }
     }
 
-    //в onPause
+    //в onPause и добавить debounce
     private val checkBoxChangedCallback: (Boolean, TodoItem) -> Unit = { isCompleted, todoItem ->
         todoItem.isCompleted = isCompleted
         viewModel.todoCompleteStatusChanged(todoItem)
@@ -69,9 +69,12 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         }
         viewModel.errorState.observe(viewLifecycleOwner) {
             when (it) {
-                ErrorState.Error -> Snackbar.make(
-                    binding.root, R.string.error, Snackbar.LENGTH_SHORT
-                ).show()
+                ErrorState.Error -> {
+                    Snackbar.make(
+                        binding.root, R.string.error, Snackbar.LENGTH_SHORT
+                    ).show()
+                    viewModel.errorShowed()
+                }
 
                 ErrorState.Ok -> {}
             }
@@ -84,7 +87,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         view.doOnPreDraw {
             startPostponedEnterTransition()
         }
-        viewModel.setupViewModelListener()
+        viewModel.syncList()
         binding.todoList.adapter = adapter
         binding.todoList.showShimmer()
         setupVisibilityButton()
@@ -121,4 +124,6 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             }
         }
     }
+
+
 }
