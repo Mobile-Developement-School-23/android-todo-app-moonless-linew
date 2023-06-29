@@ -10,6 +10,8 @@ interface TodoItemsRepository {
     suspend fun updateTodo(todoItem: TodoItem)
     suspend fun deleteTodoById(id: String)
     suspend fun getTodoById(id: String): TodoItem
-    suspend fun syncListOfTodo()
+
+    suspend fun syncFlowList()
+    suspend fun syncLocalListOfTodo()
 
 }

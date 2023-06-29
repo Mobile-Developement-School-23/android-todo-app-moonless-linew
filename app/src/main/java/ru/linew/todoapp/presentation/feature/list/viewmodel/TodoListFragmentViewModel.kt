@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.linew.todoapp.data.model.exception.TodoSyncFailed
 import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
@@ -35,14 +36,13 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
     fun syncList(){
         viewModelScope.launch {
             try {
-                repository.syncListOfTodo()
+                repository.syncLocalListOfTodo()
                 _errorState.postValue(ErrorState.Ok)
             }catch (e: TodoSyncFailed){
                 _errorState.postValue(ErrorState.Error)
             }finally {
-                repository.todoListFlow.collect{
+                repository.todoListFlow.collectLatest{
                     _todos.postValue(Result.Success(it))
-
                 }
             }
 
@@ -57,6 +57,7 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
     fun todoCompleteStatusChanged(todoItem: TodoItem){
         viewModelScope.launch {
             repository.updateTodo(todoItem)
+            repository.syncFlowList()
         }
     }
 

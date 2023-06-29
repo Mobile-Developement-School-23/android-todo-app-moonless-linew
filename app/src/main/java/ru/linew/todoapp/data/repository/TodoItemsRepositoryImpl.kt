@@ -65,7 +65,13 @@ class TodoItemsRepositoryImpl @Inject constructor(
         return localDataSource.getTodoById(id).toUi()
     }
 
-    override suspend fun syncListOfTodo() {
+    override suspend fun syncFlowList() {
+        val localTodos = localDataSource.getListOfTodos()
+        todoListFlow.emit(localTodos.map { it.toUi() })
+    }
+
+
+    override suspend fun syncLocalListOfTodo() {
         var localTodos = localDataSource.getListOfTodos()
         try {
             val remoteTodos = remoteDataSource.provideListOfTodos()

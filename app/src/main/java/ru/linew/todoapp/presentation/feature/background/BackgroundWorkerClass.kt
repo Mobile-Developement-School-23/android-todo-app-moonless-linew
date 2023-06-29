@@ -14,7 +14,7 @@ class BackgroundWorkerClass constructor(
     CoroutineWorker(context, workerParams) {
     override suspend fun doWork(): Result {
         return try {
-            repository.syncListOfTodo()
+            repository.syncLocalListOfTodo()
             Result.success()
         } catch (e: TodoSyncFailed){
             Result.retry()
