@@ -18,5 +18,5 @@
     <string name="card_edit_transition">cardEditTransition</string>
     <string name="choose_date">Выберите дату</string>
     <string name="new_item">Новое</string>
-    <string name="error">Нет интернета, загружаю локальные</string>
+    <string name="error">Нет интернета, загружаю локально</string>
 </resources>

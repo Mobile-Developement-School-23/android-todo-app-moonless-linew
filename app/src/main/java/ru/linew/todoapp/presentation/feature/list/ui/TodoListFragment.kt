@@ -15,6 +15,7 @@ import ru.linew.todoapp.presentation.application.appComponent
 import ru.linew.todoapp.presentation.feature.list.ui.recycler.TodoListAdapter
 import ru.linew.todoapp.presentation.feature.list.viewmodel.TodoListFragmentViewModel
 import ru.linew.todoapp.presentation.feature.list.viewmodel.state.ErrorState
+import ru.linew.todoapp.presentation.feature.list.viewmodel.state.Result
 import ru.linew.todoapp.presentation.model.TodoItem
 import ru.linew.todoapp.shared.Constants
 
@@ -35,6 +36,17 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             R.id.action_todoListFragment_to_todoAddFragment, bundle, null, extras
         )
     }
+    private val visibilityChangedCallback: (isVisible: Boolean) -> Unit = {
+        if (viewModel.todos.value != Result.Null) {
+            if (it) {
+                adapter.submitList((viewModel.todos.value as Result.Success).result)
+            } else {
+                adapter.submitList((viewModel.todos.value as Result.Success)
+                    .result
+                    .filter { todoItem -> !todoItem.isCompleted })
+            }
+        }
+    }
 
     //в onPause
     private val checkBoxChangedCallback: (Boolean, TodoItem) -> Unit = { isCompleted, todoItem ->
@@ -46,15 +58,19 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     override fun onStart() {
         super.onStart()
         viewModel.todos.observe(viewLifecycleOwner) {
-            binding.todoList.hideShimmer()
-            adapter.submitList(it)
+            when (it) {
+                Result.Null -> {}
+                is Result.Success -> {
+                    binding.todoList.hideShimmer()
+                    adapter.submitList(it.result)
+                }
+            }
+
         }
         viewModel.errorState.observe(viewLifecycleOwner) {
             when (it) {
                 ErrorState.Error -> Snackbar.make(
-                    binding.root,
-                    R.string.error,
-                    Snackbar.LENGTH_SHORT
+                    binding.root, R.string.error, Snackbar.LENGTH_SHORT
                 ).show()
 
                 ErrorState.Ok -> {}
@@ -95,9 +111,11 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             setOnClickListener {
                 visibilityState = if (!visibilityState) {
                     setImageResource(R.drawable.visibility)
+                    visibilityChangedCallback(true)
                     true
                 } else {
                     setImageResource(R.drawable.visibility_off)
+                    visibilityChangedCallback(false)
                     false
                 }
             }

@@ -64,7 +64,7 @@ class RemoteDataSourceImpl @Inject constructor(
     override suspend fun forceUpdateListOfTodos(todos: List<TodoItemData>) {
         val currentRevision = apiService.updateTodoList(
             sharedPreferencesDataSource.getLocalCurrentRevision(),
-            TodoListContainer(todos.map { it.toResponse() })
+            TodoListContainer(todos.map { it.toResponse().copy(lastUpdatedBy = sharedPreferencesDataSource.getDeviceId()) })
         ).revision
         sharedPreferencesDataSource.setCurrentRevision(currentRevision.toInt())
     }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import ru.linew.todoapp.data.model.exception.TodoSyncFailed
 import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
 import ru.linew.todoapp.presentation.feature.list.viewmodel.state.ErrorState
+import ru.linew.todoapp.presentation.feature.list.viewmodel.state.Result
 import ru.linew.todoapp.presentation.model.TodoItem
 
 class TodoListFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository): ViewModel() {
@@ -28,8 +29,8 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
     val errorState: LiveData<ErrorState>
         get() = _errorState
 
-    private val _todos = MutableLiveData<List<TodoItem>>()
-    val todos: LiveData<List<TodoItem>>
+    private val _todos = MutableLiveData<Result>(Result.Null)
+    val todos: LiveData<Result>
         get() = _todos
     fun setupViewModelListener(){
         viewModelScope.launch {
@@ -40,7 +41,7 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
                 _errorState.postValue(ErrorState.Error)
             }finally {
                 repository.todoListFlow.collect{
-                    _todos.postValue(it)
+                    _todos.postValue(Result.Success(it))
                 }
             }
 
