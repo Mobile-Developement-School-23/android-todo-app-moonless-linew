@@ -23,6 +23,9 @@ interface TodoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addListOfTodos(todoItemList: List<TodoItemEntity>)
 
+    @Query("DELETE FROM todos")
+    suspend fun deleteAllTodos()
+
     @Delete
     suspend fun deleteTodo(todoItem: TodoItemEntity)
 

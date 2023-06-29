@@ -8,11 +8,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.snackbar.Snackbar
 import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.FragmentTodoListBinding
 import ru.linew.todoapp.presentation.application.appComponent
 import ru.linew.todoapp.presentation.feature.list.ui.recycler.TodoListAdapter
 import ru.linew.todoapp.presentation.feature.list.viewmodel.TodoListFragmentViewModel
+import ru.linew.todoapp.presentation.feature.list.viewmodel.state.ErrorState
 import ru.linew.todoapp.presentation.model.TodoItem
 import ru.linew.todoapp.shared.Constants
 
@@ -33,22 +35,30 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             R.id.action_todoListFragment_to_todoAddFragment, bundle, null, extras
         )
     }
+
     //в onPause
     private val checkBoxChangedCallback: (Boolean, TodoItem) -> Unit = { isCompleted, todoItem ->
         todoItem.isCompleted = isCompleted
         viewModel.todoCompleteStatusChanged(todoItem)
     }
     private val adapter = TodoListAdapter(itemClickCallback, checkBoxChangedCallback)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onStart() {
         super.onStart()
         viewModel.todos.observe(viewLifecycleOwner) {
             binding.todoList.hideShimmer()
             adapter.submitList(it)
+        }
+        viewModel.errorState.observe(viewLifecycleOwner) {
+            when (it) {
+                ErrorState.Error -> Snackbar.make(
+                    binding.root,
+                    R.string.error,
+                    Snackbar.LENGTH_SHORT
+                ).show()
+
+                ErrorState.Ok -> {}
+            }
         }
     }
 

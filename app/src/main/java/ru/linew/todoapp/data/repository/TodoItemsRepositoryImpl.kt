@@ -1,9 +1,8 @@
 package ru.linew.todoapp.data.repository
 
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import ru.linew.todoapp.data.model.exception.TodoSyncFailed
 import ru.linew.todoapp.data.model.toUi
 import ru.linew.todoapp.data.repository.datasource.local.LocalDataSource
 import ru.linew.todoapp.data.repository.datasource.local.SharedPreferencesDataSource
@@ -22,18 +21,18 @@ class TodoItemsRepositoryImpl @Inject constructor(
 ) :
     TodoItemsRepository {
 
-    private val todoListFlow: MutableStateFlow<List<TodoItem>> = MutableStateFlow(emptyList())
-
-    //syncList() - обновляет
+    override val todoListFlow: MutableStateFlow<List<TodoItem>> = MutableStateFlow(emptyList())
 
     override suspend fun addTodo(todoItem: TodoItem) {
         try {
-            remoteDataSource.addTodo(sharedPreferencesDataSource.getLocalCurrentRevision(),todoItem.toDto())
-        }
-        catch (e: UnknownHostException){
+            remoteDataSource.addTodo(
+                sharedPreferencesDataSource.getLocalCurrentRevision(),
+                todoItem.toDto()
+            )
+        } catch (e: Exception) {
             sharedPreferencesDataSource.flagNeedSyncUp()
-        }
-        finally {
+            //throw TodoSyncFailed()
+        } finally {
             localDataSource.addTodo(todoItem.toDto())
         }
 
@@ -43,12 +42,10 @@ class TodoItemsRepositoryImpl @Inject constructor(
         try {
             remoteDataSource.updateTodo(todoItem.toDto())
 
-        }
-        catch (e: UnknownHostException){
+        } catch (e: Exception) {
             sharedPreferencesDataSource.flagNeedSyncUp()
-            //кастмоный экспешн
-        }
-        finally {
+            //throw TodoSyncFailed()
+        } finally {
             localDataSource.updateTodo(todoItem.toDto())
         }
     }
@@ -56,11 +53,10 @@ class TodoItemsRepositoryImpl @Inject constructor(
     override suspend fun deleteTodoById(id: String) {
         try {
             remoteDataSource.deleteTodoById(id)
-        }
-        catch (e: UnknownHostException){
+        } catch (e: Exception) {
             sharedPreferencesDataSource.flagNeedSyncUp()
-        }
-        finally {
+            //throw TodoSyncFailed()
+        } finally {
             localDataSource.deleteTodoById(id)
         }
     }
@@ -69,18 +65,25 @@ class TodoItemsRepositoryImpl @Inject constructor(
         return localDataSource.getTodoById(id).toUi()
     }
 
-    override suspend fun getListOfTodo(): List<TodoItem> =
+    override suspend fun syncListOfTodo() {
+        var localTodos = localDataSource.getListOfTodos()
         try {
             val remoteTodos = remoteDataSource.provideListOfTodos()
-            localDataSource.addListOfTodos(remoteTodos)
-            sharedPreferencesDataSource.flagNeedSyncDown()
-            todoListFlow.emit(remoteTodos.map { it.toUi() })
-            remoteTodos.map { it.toUi() }
-        }
-        catch (e: UnknownHostException){
-            val localTodos = localDataSource.getListOfTodos()
+            if (sharedPreferencesDataSource.getFlagNeedSyncState()){
+
+                remoteDataSource.forceUpdateListOfTodos(localTodos)
+                sharedPreferencesDataSource.flagNeedSyncDown()
+            }
+            else{
+                localDataSource.forceUpdateListOfTodos(remoteTodos)
+                localTodos = remoteTodos
+            }
+
+        } catch (e: Exception) {
             sharedPreferencesDataSource.flagNeedSyncUp()
+            throw TodoSyncFailed()
+        } finally {
             todoListFlow.emit(localTodos.map { it.toUi() })
-            localTodos.map { it.toUi() }
         }
     }
+}

@@ -30,6 +30,11 @@ class LocalDataSourceImpl @Inject constructor(private val todoDao: TodoDao) : Lo
 
     }
 
+    override suspend fun forceUpdateListOfTodos(todoItemList: List<TodoItemData>) {
+        todoDao.deleteAllTodos()
+        todoDao.addListOfTodos(todoItemList.map { it.toEntity() })
+    }
+
     override suspend fun updateTodo(todoItem: TodoItemData) {
         todoDao.updateTodo(todoItem.toEntity())
     }

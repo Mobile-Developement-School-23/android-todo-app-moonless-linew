@@ -11,6 +11,7 @@ import retrofit2.http.Path
 import ru.linew.todoapp.data.network.model.recieve.TodoListResponse
 import ru.linew.todoapp.data.network.model.recieve.TodoSingleResponse
 import ru.linew.todoapp.data.network.model.send.TodoItemContainer
+import ru.linew.todoapp.data.network.model.send.TodoListContainer
 
 
 interface TodoApiService {
@@ -18,7 +19,10 @@ interface TodoApiService {
     suspend fun getTodoList(): TodoListResponse
 
     @PATCH("list")
-    suspend fun updateTodoList()
+    suspend fun updateTodoList(
+        @Header("X-Last-Known-Revision") revision: Int,
+        @Body list: TodoListContainer
+    ):TodoListResponse
 
     @GET("list/{id}")
     suspend fun getTodoItemById(@Path("id") trackID: String): TodoSingleResponse
@@ -27,7 +31,7 @@ interface TodoApiService {
     suspend fun addTodo(
         @Header("X-Last-Known-Revision") revision: Int,
         @Body element: TodoItemContainer
-    )
+    ): TodoSingleResponse
 
     @PUT("list/{id}")
     suspend fun updateTodoById(
@@ -40,6 +44,6 @@ interface TodoApiService {
     suspend fun deleteTodoById(
         @Header("X-Last-Known-Revision") revision: Int,
         @Path("id") id: String
-    )
+    ): TodoSingleResponse
 
 }

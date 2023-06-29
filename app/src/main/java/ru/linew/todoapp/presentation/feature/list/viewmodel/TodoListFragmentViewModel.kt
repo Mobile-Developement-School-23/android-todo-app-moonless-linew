@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
+import ru.linew.todoapp.data.model.exception.TodoSyncFailed
 import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
+import ru.linew.todoapp.presentation.feature.list.viewmodel.state.ErrorState
 import ru.linew.todoapp.presentation.model.TodoItem
 
 class TodoListFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository): ViewModel() {
@@ -22,13 +24,27 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
             return factory.create() as T
         }
     }
+    private val _errorState = MutableLiveData<ErrorState>(ErrorState.Ok)
+    val errorState: LiveData<ErrorState>
+        get() = _errorState
 
     private val _todos = MutableLiveData<List<TodoItem>>()
     val todos: LiveData<List<TodoItem>>
         get() = _todos
     fun setupViewModelListener(){
         viewModelScope.launch {
-            _todos.postValue(repository.getListOfTodo())
+            try {
+                repository.syncListOfTodo()
+                _errorState.postValue(ErrorState.Ok)
+            }catch (e: TodoSyncFailed){
+                _errorState.postValue(ErrorState.Error)
+            }finally {
+                repository.todoListFlow.collect{
+                    _todos.postValue(it)
+                }
+            }
+
+
         }
     }
 

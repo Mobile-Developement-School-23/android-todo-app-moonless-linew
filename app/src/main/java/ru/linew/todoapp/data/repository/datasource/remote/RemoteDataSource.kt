@@ -13,4 +13,6 @@ interface RemoteDataSource {
     suspend fun updateTodo(todoItemData: TodoItemData)
 
     suspend fun deleteTodoById(id: String)
+
+    suspend fun forceUpdateListOfTodos(todos: List<TodoItemData>)
 }

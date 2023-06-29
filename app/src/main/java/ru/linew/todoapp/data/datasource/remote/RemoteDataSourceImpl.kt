@@ -4,6 +4,7 @@ import ru.linew.todoapp.data.model.TodoItemData
 import ru.linew.todoapp.data.model.toResponse
 import ru.linew.todoapp.data.network.TodoApiService
 import ru.linew.todoapp.data.network.model.send.TodoItemContainer
+import ru.linew.todoapp.data.network.model.send.TodoListContainer
 import ru.linew.todoapp.data.network.model.toData
 import ru.linew.todoapp.data.repository.datasource.local.SharedPreferencesDataSource
 import ru.linew.todoapp.data.repository.datasource.remote.RemoteDataSource
@@ -21,12 +22,15 @@ class RemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun addTodo(revision: Int, todoItemData: TodoItemData) {
-        apiService.addTodo(
+        val currentRevision = apiService.addTodo(
             sharedPreferencesDataSource.getLocalCurrentRevision(),
             TodoItemContainer(
                 todoItemData.toResponse()
                     .copy(lastUpdatedBy = sharedPreferencesDataSource.getDeviceId())
             )
+        ).revision
+        sharedPreferencesDataSource.setCurrentRevision(
+            currentRevision.toInt()
         )
     }
 
@@ -50,7 +54,19 @@ class RemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun deleteTodoById(id: String) {
-        apiService.deleteTodoById(sharedPreferencesDataSource.getLocalCurrentRevision(), id)
+        val currentRevision = apiService.deleteTodoById(
+            sharedPreferencesDataSource.getLocalCurrentRevision(),
+            id
+        ).revision
+        sharedPreferencesDataSource.setCurrentRevision(currentRevision.toInt())
+    }
+
+    override suspend fun forceUpdateListOfTodos(todos: List<TodoItemData>) {
+        val currentRevision = apiService.updateTodoList(
+            sharedPreferencesDataSource.getLocalCurrentRevision(),
+            TodoListContainer(todos.map { it.toResponse() })
+        ).revision
+        sharedPreferencesDataSource.setCurrentRevision(currentRevision.toInt())
     }
 
 

@@ -90,7 +90,8 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
                 viewModel.currentEditStatus.collect{
                     when(it){
                         EditStatus.InProcess -> {}
-                        else -> findNavController().navigateUp()
+                        EditStatus.Null -> {}
+                        EditStatus.Done -> findNavController().navigateUp()
                     }
 
                 }

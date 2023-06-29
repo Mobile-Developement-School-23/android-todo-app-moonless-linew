@@ -12,5 +12,6 @@ interface LocalDataSource {
 
     suspend fun deleteTodoById(id: String)
 
+    suspend fun forceUpdateListOfTodos(todoItemList: List<TodoItemData>)
     suspend fun updateTodo(todoItem: TodoItemData)
 }

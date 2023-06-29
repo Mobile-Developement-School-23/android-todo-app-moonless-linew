@@ -30,32 +30,34 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
             return factory.create() as T
         }
     }
+
     private lateinit var mode: Mode
 
     private val _currentTodo = MutableStateFlow<Result<TodoItem>>(Result.Loading)
     val currentTodo: StateFlow<Result<TodoItem>> = _currentTodo
 
-    private val _currentEditStatus = MutableStateFlow<EditStatus>(EditStatus.InProcess)
+    private val _currentEditStatus = MutableStateFlow<EditStatus>(EditStatus.Null)
     val currentEditStatus: StateFlow<EditStatus> = _currentEditStatus
 
-    fun todoBodyTextChanged(body: String){
-        if(currentTodo.value is Result.Complete)
+    fun todoBodyTextChanged(body: String) {
+        if (currentTodo.value is Result.Complete)
             (currentTodo.value as Result.Complete<TodoItem>).result.body = body
     }
-    fun todoPriorityChanged(priority: Priority){
-        if(currentTodo.value is Result.Complete)
+
+    fun todoPriorityChanged(priority: Priority) {
+        if (currentTodo.value is Result.Complete)
             (currentTodo.value as Result.Complete<TodoItem>).result.priority = priority
     }
 
-    fun todoDeadlineTimeChanged(deadlineTime: Long?){
-        if(currentTodo.value is Result.Complete)
+    fun todoDeadlineTimeChanged(deadlineTime: Long?) {
+        if (currentTodo.value is Result.Complete)
             (currentTodo.value as Result.Complete<TodoItem>).result.deadlineTime = deadlineTime
     }
 
     fun deleteButtonClicked(id: String) {
         viewModelScope.launch {
             repository.deleteTodoById(id)
-            _currentEditStatus.value = EditStatus.Deleted
+            _currentEditStatus.value = EditStatus.Done
         }
     }
 
@@ -63,15 +65,17 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
         if (id == null) {
             mode = Mode.CREATING
             if (_currentTodo.value is Result.Loading) {
-                _currentTodo.value = Result.Complete(TodoItem(
-                    UUID.randomUUID().toString(),
-                    "",
-                    Priority.NO,
-                    deadlineTime = null,
-                    isCompleted = false,
-                    creationTime = System.currentTimeMillis(),
-                    System.currentTimeMillis()
-                ))
+                _currentTodo.value = Result.Complete(
+                    TodoItem(
+                        UUID.randomUUID().toString(),
+                        "",
+                        Priority.NO,
+                        deadlineTime = null,
+                        isCompleted = false,
+                        creationTime = System.currentTimeMillis(),
+                        System.currentTimeMillis()
+                    )
+                )
             }
         } else {
             mode = Mode.EDITING
@@ -83,19 +87,22 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
     }
 
     fun saveButtonClicked() {
-        when (mode) {
-            Mode.CREATING -> viewModelScope.launch {
-                repository.addTodo((currentTodo.value as Result.Complete).result)
-                _currentEditStatus.value = EditStatus.Created
-                _currentTodo.value = Result.Loading
-            }
+        if (_currentEditStatus.value != EditStatus.InProcess)
+            when (mode) {
+                Mode.CREATING -> viewModelScope.launch {
+                    _currentEditStatus.value = EditStatus.InProcess
+                    repository.addTodo((currentTodo.value as Result.Complete).result)
+                    _currentEditStatus.value = EditStatus.Done
+                    _currentTodo.value = Result.Loading
+                }
 
-            Mode.EDITING -> viewModelScope.launch {
-                repository.updateTodo((currentTodo.value as Result.Complete).result)
-                _currentEditStatus.value = EditStatus.Updated
-                _currentTodo.value = Result.Loading
+                Mode.EDITING -> viewModelScope.launch {
+                    _currentEditStatus.value = EditStatus.InProcess
+                    repository.updateTodo((currentTodo.value as Result.Complete).result)
+                    _currentEditStatus.value = EditStatus.Done
+                    _currentTodo.value = Result.Loading
+                }
             }
-        }
 
     }
 }
