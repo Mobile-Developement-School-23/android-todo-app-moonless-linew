@@ -10,7 +10,6 @@ import ru.linew.todoapp.data.repository.datasource.remote.RemoteDataSource
 import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
 import ru.linew.todoapp.presentation.model.TodoItem
 import ru.linew.todoapp.presentation.model.toDto
-import java.net.UnknownHostException
 import javax.inject.Inject
 
 

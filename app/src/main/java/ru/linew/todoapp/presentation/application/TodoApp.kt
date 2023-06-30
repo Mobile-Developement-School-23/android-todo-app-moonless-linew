@@ -8,7 +8,6 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.WorkerFactory
 import ru.linew.todoapp.di.component.AppComponent
 import ru.linew.todoapp.di.component.DaggerAppComponent
 import ru.linew.todoapp.di.module.ApplicationModule

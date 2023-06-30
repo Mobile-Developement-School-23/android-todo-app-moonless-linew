@@ -1,17 +1,10 @@
 package ru.linew.todoapp.presentation.activity
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.yandex.authsdk.YandexAuthException
-import com.yandex.authsdk.YandexAuthLoginOptions
-import com.yandex.authsdk.YandexAuthOptions
-import com.yandex.authsdk.YandexAuthSdk
-import com.yandex.authsdk.YandexAuthToken
 import ru.linew.todoapp.R
 import ru.linew.todoapp.presentation.application.appComponent
 import ru.linew.todoapp.shared.Constants

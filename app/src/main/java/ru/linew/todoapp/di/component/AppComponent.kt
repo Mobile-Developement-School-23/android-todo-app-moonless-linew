@@ -1,6 +1,5 @@
 package ru.linew.todoapp.di.component
 
-import android.app.Application
 import dagger.Component
 import ru.linew.todoapp.di.module.ApiModule
 import ru.linew.todoapp.di.module.ApplicationModule
