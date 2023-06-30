@@ -14,4 +14,3 @@
 .cxx
 local.properties
 /.idea/
-/app/src/main/java/ru/linew/todoapp/shared/Token.kt

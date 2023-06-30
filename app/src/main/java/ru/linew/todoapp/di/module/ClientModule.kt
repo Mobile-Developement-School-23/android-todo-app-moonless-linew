@@ -10,7 +10,6 @@ import javax.inject.Singleton
 
 @Module
 object ClientModule {
-
     @Singleton
     @Provides
     fun provideOkHttpClient(): OkHttpClient {
@@ -25,10 +24,10 @@ object ClientModule {
                 var response = it.proceed(request)
                 var tryCount = 0
                 while (!response.isSuccessful && tryCount < 2) {
-                    Log.d("intercept", "Request is not successful - $tryCount");
-                    tryCount++;
+                    Log.d("intercept", "Request is not successful - $tryCount")
+                    tryCount++
                     response.close()
-                    response = it.proceed(request);
+                    response = it.proceed(request)
                 }
                 return@addInterceptor response
             }
