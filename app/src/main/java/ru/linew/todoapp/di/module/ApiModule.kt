@@ -10,7 +10,7 @@ import ru.linew.todoapp.shared.Constants
 import javax.inject.Singleton
 
 @Module
-class ApiModule {
+object ApiModule {
     @Singleton
     @Provides
     fun provideRetrofitClient(okHttpClient: OkHttpClient): Retrofit {

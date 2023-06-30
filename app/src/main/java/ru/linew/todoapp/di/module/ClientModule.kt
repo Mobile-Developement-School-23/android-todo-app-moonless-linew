@@ -7,7 +7,7 @@ import ru.linew.todoapp.shared.Token
 import javax.inject.Singleton
 
 @Module
-class ClientModule {
+object ClientModule {
 
     @Singleton
     @Provides

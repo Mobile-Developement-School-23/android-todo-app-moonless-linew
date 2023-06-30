@@ -19,4 +19,12 @@
     <string name="choose_date">Выберите дату</string>
     <string name="new_item">Новое</string>
     <string name="error">Нет интернета, загружаю локально</string>
+    <string name="auth_dialog_title">Яндекс.Паспорт</string>
+    <string name="auth_dialog_message">Желаете войти с помощью Яндекс аккаунта?</string>
+    <string name="auth_dialog_positive">Да</string>
+    <string name="auth_dialog_negative">Нет</string>
+    <string name="auth_dialog_neutral">Больше не спрашивай</string>
+
+
+
 </resources>

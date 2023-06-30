@@ -4,6 +4,7 @@ import android.app.Application
 import dagger.Component
 import ru.linew.todoapp.di.module.ApiModule
 import ru.linew.todoapp.di.module.ApplicationModule
+import ru.linew.todoapp.di.module.AuthModule
 import ru.linew.todoapp.di.module.ClientModule
 import ru.linew.todoapp.di.module.DataBaseModule
 import ru.linew.todoapp.di.module.DataSourceModule
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [RepositoryModule::class, ApplicationModule::class, ClientModule::class,
-    ApiModule::class, DataSourceModule::class, DataBaseModule::class])
+    ApiModule::class, DataSourceModule::class, DataBaseModule::class, AuthModule::class])
 interface AppComponent {
 
     fun injectApplication(application: TodoApp)
