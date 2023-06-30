@@ -47,7 +47,9 @@ class TodoItemsRepositoryImpl @Inject constructor(
             //throw TodoSyncFailed()
         } finally {
             localDataSource.updateTodo(todoItem.toDto())
+
         }
+        syncFlowList()
     }
 
     override suspend fun deleteTodoById(id: String) {
@@ -58,7 +60,9 @@ class TodoItemsRepositoryImpl @Inject constructor(
             //throw TodoSyncFailed()
         } finally {
             localDataSource.deleteTodoById(id)
+
         }
+        syncFlowList()
     }
 
     override suspend fun getTodoById(id: String): TodoItem {

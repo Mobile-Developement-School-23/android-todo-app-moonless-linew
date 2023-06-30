@@ -26,7 +26,6 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             requireActivity().appComponent.injectTodoListFragmentViewModel()
         )
     }
-    private var visibilityState = true
     private val itemClickCallback: (View, TodoItem) -> Unit = { view: View, todoItem: TodoItem ->
         val extras = FragmentNavigatorExtras(view to getString(R.string.card_edit_transition))
         val bundle = Bundle().apply {
@@ -35,17 +34,6 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         findNavController().navigate(
             R.id.action_todoListFragment_to_todoAddFragment, bundle, null, extras
         )
-    }
-    private val visibilityChangedCallback: (isVisible: Boolean) -> Unit = {
-        if (viewModel.todos.value != Result.Null) {
-            if (it) {
-                adapter.submitList((viewModel.todos.value as Result.Success).result)
-            } else {
-                adapter.submitList((viewModel.todos.value as Result.Success)
-                    .result
-                    .filter { todoItem -> !todoItem.isCompleted })
-            }
-        }
     }
 
     //в onPause или добавить debounce
@@ -57,23 +45,16 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
 
     override fun onStart() {
         super.onStart()
-        viewModel.todos.observe(viewLifecycleOwner) {
+        viewModel.listTodos.observe(viewLifecycleOwner) {
             when (it) {
                 Result.Null -> {}
                 is Result.Success -> {
-                    binding.todoList.hideShimmer()
-                    binding.completedCounter.text =
-                        getString(R.string.completed, it.result.count { item -> item.isCompleted })
-                    if(visibilityState){
-                        adapter.submitList(it.result)
-                    }
-                    else{
-                        adapter.submitList(it.result.filter {item -> !item.isCompleted })
-                    }
+                    updateList(it.result, it.visibility)
+                    updateVisibilityIcon(it.visibility)
                 }
             }
-
         }
+
         viewModel.errorState.observe(viewLifecycleOwner) {
             when (it) {
                 ErrorState.Error -> {
@@ -85,6 +66,24 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
 
                 ErrorState.Ok -> {}
             }
+        }
+    }
+
+    private fun updateList(todoList: List<TodoItem>, visibility: Boolean) {
+        binding.todoList.hideShimmer()
+        binding.completedCounter.text =
+            getString(R.string.completed, todoList.count { item -> item.isCompleted })
+        if (visibility) {
+            adapter.submitList(todoList)
+        } else {
+            adapter.submitList(todoList.filter { item -> !item.isCompleted })
+        }
+    }
+    private fun updateVisibilityIcon(visibility: Boolean){
+        if (visibility){
+            binding.visibilityIcon.setImageResource(R.drawable.visibility)
+        }else{
+            binding.visibilityIcon.setImageResource(R.drawable.visibility_off)
         }
     }
 
@@ -119,15 +118,16 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private fun setupVisibilityButton() {
         binding.visibilityIcon.apply {
             setOnClickListener {
-                visibilityState = if (!visibilityState) {
-                    setImageResource(R.drawable.visibility)
-                    visibilityChangedCallback(true)
-                    true
-                } else {
-                    setImageResource(R.drawable.visibility_off)
-                    visibilityChangedCallback(false)
-                    false
-                }
+//                visibilityState = if (!visibilityState) {
+//                    setImageResource(R.drawable.visibility)
+//                    visibilityChangedCallback(true)
+//                    true
+//                } else {
+//                    setImageResource(R.drawable.visibility_off)
+//                    visibilityChangedCallback(false)
+//                    false
+//                }
+                viewModel.visibilityStateChanged()
             }
         }
     }

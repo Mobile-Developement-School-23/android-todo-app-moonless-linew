@@ -15,52 +15,72 @@ import ru.linew.todoapp.presentation.feature.list.viewmodel.state.ErrorState
 import ru.linew.todoapp.presentation.feature.list.viewmodel.state.Result
 import ru.linew.todoapp.presentation.model.TodoItem
 
-class TodoListFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository): ViewModel() {
+class TodoListFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository) :
+    ViewModel() {
     @AssistedFactory
-    interface TodoListFragmentViewModelFactory{
+    interface TodoListFragmentViewModelFactory {
         fun create(): TodoListFragmentViewModel
     }
+
     @Suppress("UNCHECKED_CAST")
-    class Factory(private val factory: TodoListFragmentViewModelFactory) : ViewModelProvider.Factory {
+    class Factory(private val factory: TodoListFragmentViewModelFactory) :
+        ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return factory.create() as T
         }
     }
+
     private val _errorState = MutableLiveData<ErrorState>(ErrorState.Ok)
     val errorState: LiveData<ErrorState>
         get() = _errorState
 
-    private val _todos = MutableLiveData<Result>(Result.Null)
-    val todos: LiveData<Result>
-        get() = _todos
-    fun syncList(){
+
+
+    private val _listTodos = MutableLiveData<Result>(Result.Null)
+    val listTodos: LiveData<Result>
+        get() = _listTodos
+
+    private var tempTodos: List<TodoItem> = emptyList()
+    private var visibility: Boolean = true
+
+    init {
+        viewModelScope.launch {
+            repository.todoListFlow.collectLatest {
+                tempTodos = it
+                postListToUi()
+            }
+        }
+    }
+
+    private fun postListToUi(){
+        _listTodos.postValue(Result.Success(tempTodos, visibility))
+    }
+
+
+    fun visibilityStateChanged() {
+        visibility = !visibility
+        postListToUi()
+    }
+    fun syncList() {
         viewModelScope.launch {
             try {
                 repository.syncLocalListOfTodo()
                 _errorState.postValue(ErrorState.Ok)
-            }catch (e: TodoSyncFailed){
+            } catch (e: TodoSyncFailed) {
                 _errorState.postValue(ErrorState.Error)
-            }finally {
-                repository.todoListFlow.collectLatest{
-                    _todos.postValue(Result.Success(it))
-                }
             }
-
-
         }
     }
 
-    fun errorShowed(){
+    fun errorShowed() {
         _errorState.postValue(ErrorState.Ok)
     }
 
-    fun todoCompleteStatusChanged(todoItem: TodoItem){
+    fun todoCompleteStatusChanged(todoItem: TodoItem) {
         viewModelScope.launch {
             repository.updateTodo(todoItem)
-            repository.syncFlowList()
         }
     }
-
 
 
 }
