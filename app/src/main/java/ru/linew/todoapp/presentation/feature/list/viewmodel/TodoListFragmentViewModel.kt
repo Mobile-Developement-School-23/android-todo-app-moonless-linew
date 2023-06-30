@@ -15,7 +15,9 @@ import ru.linew.todoapp.presentation.feature.list.viewmodel.state.ErrorState
 import ru.linew.todoapp.presentation.feature.list.viewmodel.state.Result
 import ru.linew.todoapp.presentation.model.TodoItem
 
-class TodoListFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository) :
+class TodoListFragmentViewModel @AssistedInject constructor(
+    val repository: TodoItemsRepository
+) :
     ViewModel() {
     @AssistedFactory
     interface TodoListFragmentViewModelFactory {
@@ -35,24 +37,29 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
         get() = _errorState
 
 
-
     private val _listTodos = MutableLiveData<Result>(Result.Null)
     val listTodos: LiveData<Result>
         get() = _listTodos
 
     private var tempTodos: List<TodoItem> = emptyList()
     private var visibility: Boolean = true
+    private var isInitialized: Boolean = false
 
     init {
         viewModelScope.launch {
             repository.todoListFlow.collectLatest {
-                tempTodos = it
-                postListToUi()
+                if (isInitialized) {
+                    tempTodos = it
+                    postListToUi()
+                } else if (!isInitialized && it.isEmpty()) {
+                    isInitialized = true
+                }
+
             }
         }
     }
 
-    private fun postListToUi(){
+    private fun postListToUi() {
         _listTodos.postValue(Result.Success(tempTodos, visibility))
     }
 
@@ -61,6 +68,7 @@ class TodoListFragmentViewModel @AssistedInject constructor(val repository: Todo
         visibility = !visibility
         postListToUi()
     }
+
     fun syncList() {
         viewModelScope.launch {
             try {

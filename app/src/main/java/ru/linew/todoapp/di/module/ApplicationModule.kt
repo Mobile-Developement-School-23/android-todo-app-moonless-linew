@@ -12,13 +12,13 @@ class ApplicationModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideContext(): Context{
+    fun provideContext(): Context {
         return context
     }
 
     @Singleton
     @Provides
-    fun provideSharedPreferences(context: Context): SharedPreferences{
+    fun provideSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
 }

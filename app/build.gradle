@@ -14,7 +14,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-        manifestPlaceholders = [YANDEX_CLIENT_ID:"46bfcfb20a9e41888cf1b3c229777780"]
+        manifestPlaceholders = [YANDEX_CLIENT_ID:"0d0970774e284fa8ba9ff70b6b06479a"]
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

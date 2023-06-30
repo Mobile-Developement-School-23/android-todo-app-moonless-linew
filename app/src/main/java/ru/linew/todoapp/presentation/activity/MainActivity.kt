@@ -12,7 +12,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 
-@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     @Inject
