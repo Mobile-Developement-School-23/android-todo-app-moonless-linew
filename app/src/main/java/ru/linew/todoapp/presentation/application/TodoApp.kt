@@ -13,6 +13,7 @@ import ru.linew.todoapp.di.component.DaggerAppComponent
 import ru.linew.todoapp.di.module.ApplicationModule
 import ru.linew.todoapp.presentation.feature.background.BackgroundWorkerClass
 import ru.linew.todoapp.presentation.feature.background.BackgroundWorkerFactory
+import ru.linew.todoapp.shared.Constants
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -30,7 +31,7 @@ class TodoApp : Application(), Configuration.Provider {
         val constraints =
             Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
         val uploadWorkRequest =
-            PeriodicWorkRequestBuilder<BackgroundWorkerClass>(8, TimeUnit.HOURS).setConstraints(
+            PeriodicWorkRequestBuilder<BackgroundWorkerClass>(Constants.REPEAT_INTERVAL_IN_HOURS, TimeUnit.HOURS).setConstraints(
                 constraints
             ).build()
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(

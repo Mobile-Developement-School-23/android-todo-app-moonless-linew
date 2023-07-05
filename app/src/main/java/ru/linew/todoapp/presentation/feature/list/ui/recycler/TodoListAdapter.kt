@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.google.android.material.checkbox.MaterialCheckBox
 import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.TodoItemBinding
 import ru.linew.todoapp.presentation.model.Priority
@@ -13,7 +12,7 @@ import ru.linew.todoapp.presentation.model.TodoItem
 import ru.linew.todoapp.presentation.utils.toDateFormat
 
 class TodoListAdapter(
-    private val onTodoClick: (View, TodoItem) -> Unit,
+    private val onTodoViewClick: (View, TodoItem) -> Unit,
     private val onCheckBoxClick: (Boolean, TodoItem) -> Unit
 ) :
     ListAdapter<TodoItem, TodoListAdapter.ViewHolder>(ItemCallback) {
@@ -30,7 +29,7 @@ class TodoListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.onBind(
             getItem(position),
-            onTodoClick = onTodoClick,
+            onTodoClick = onTodoViewClick,
             onCheckBoxClick = onCheckBoxClick
         )
     }
@@ -42,11 +41,10 @@ class TodoListAdapter(
             onTodoClick: (View, TodoItem) -> Unit,
             onCheckBoxClick: (Boolean, TodoItem) -> Unit
         ) {
-            binding.todoBody.text = item.body
             bindTransitionName(item.id)
-            bindPriority(item.priority)
-            bindCompletionStatus(item.isCompleted)
-            bindCheckBox(onCheckBoxClick, item)
+            bindBodyTextView(item.body, item.isCompleted)
+            bindPriorityIcon(item.priority)
+            bindCheckBox(item.isCompleted)
             bindMakeUntilTextView(item.deadlineTime)
             binding.root.setOnClickListener {
                 onTodoClick(binding.root, item)
@@ -57,40 +55,25 @@ class TodoListAdapter(
 
         }
 
-        private fun bindCompletionStatus(isCompleted: Boolean) {
+        private fun bindBodyTextView(text: String, isCompleted: Boolean) {
+            binding.todoBody.text = text
             if (isCompleted) {
                 binding.todoBody.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                binding.checkBox.isChecked = true
-                binding.checkBox.isErrorShown = false
-
             } else {
                 binding.todoBody.paintFlags =
                     binding.todoBody.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                binding.checkBox.isChecked = false
             }
+        }
+
+        private fun bindCheckBox(isCompleted: Boolean) {
+            binding.checkBox.isChecked = isCompleted
+            if (isCompleted) binding.checkBox.isErrorShown = false
         }
 
         private fun bindMakeUntilTextView(deadlineTime: Long?) {
             if (deadlineTime != null) {
-                binding.makeUntilTextView.text = (deadlineTime).toDateFormat()
+                binding.makeUntilTextView.text = deadlineTime.toDateFormat()
                 binding.makeUntilTextView.visibility = View.VISIBLE
-            }
-        }
-
-        private fun bindCheckBox(callback: (Boolean, TodoItem) -> Unit, item: TodoItem) {
-            binding.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
-                if (isChecked) {
-                    callback(true, item)
-                    with(binding.todoBody) {
-                        paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                    }
-                } else {
-                    callback(false, item)
-                    with(binding.todoBody) {
-                        paintFlags =
-                            binding.todoBody.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                    }
-                }
             }
         }
 
@@ -98,7 +81,7 @@ class TodoListAdapter(
             binding.root.transitionName = id
         }
 
-        private fun bindPriority(priority: Priority) {
+        private fun bindPriorityIcon(priority: Priority) {
             when (priority) {
                 Priority.LOW -> binding.priorityIcon.apply {
                     visibility = View.VISIBLE
@@ -112,9 +95,6 @@ class TodoListAdapter(
                         setImageResource(R.drawable.high_priority)
                     }
                     binding.checkBox.isErrorShown = true
-                    binding.checkBox.addOnCheckedStateChangedListener { checkBox, state ->
-                        checkBox.isErrorShown = MaterialCheckBox.STATE_CHECKED != state
-                    }
 
                 }
             }

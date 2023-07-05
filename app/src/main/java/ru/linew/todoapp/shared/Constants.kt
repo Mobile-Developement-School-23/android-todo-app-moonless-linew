@@ -9,5 +9,7 @@ object Constants {
     const val SHARED_PREFERENCES_AUTH_STATE_KEY = "auth_state"
     const val SHARED_PREFERENCES_TOKEN_KEY = "token"
 
+    const val REPEAT_INTERVAL_IN_HOURS = 8L
+
     const val TODO_ID_ARGUMENT_KEY = "id"
 }

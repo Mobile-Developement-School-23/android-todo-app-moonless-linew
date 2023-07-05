@@ -50,7 +50,7 @@
             tools:visibility="gone" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/todoBody"
+            android:id="@+id/todo_body"
             style="@style/Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

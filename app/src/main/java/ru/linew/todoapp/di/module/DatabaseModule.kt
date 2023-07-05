@@ -9,7 +9,7 @@ import ru.linew.todoapp.data.db.TodoDataBase
 import javax.inject.Singleton
 
 @Module
-object DataBaseModule {
+object DatabaseModule {
 
     @Singleton
     @Provides

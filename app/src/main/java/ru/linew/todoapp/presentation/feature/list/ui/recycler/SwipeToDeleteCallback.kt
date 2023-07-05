@@ -89,9 +89,7 @@ class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.Callback() {
         return 0.8f
     }
 
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-
-    }
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
     private fun clearCanvas(c: Canvas, left: Float, top: Float, right: Float, bottom: Float) {
         c.drawRect(left, top, right, bottom, mClearPaint)
     }

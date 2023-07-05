@@ -5,7 +5,6 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import ru.linew.todoapp.shared.Token
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -15,9 +14,6 @@ object ClientModule {
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient
             .Builder()
-            .connectTimeout(120, TimeUnit.SECONDS)
-            .readTimeout(120, TimeUnit.SECONDS)
-            .writeTimeout(90, TimeUnit.SECONDS)
             .addInterceptor {
                 val request =
                     it.request().newBuilder().addHeader("Authorization", Token.Token).build()

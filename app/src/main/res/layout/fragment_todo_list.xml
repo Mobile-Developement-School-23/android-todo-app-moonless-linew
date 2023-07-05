@@ -68,12 +68,11 @@
         app:cardCornerRadius="16dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <com.todkars.shimmer.ShimmerRecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/todoList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             tools:itemCount="3"
             tools:listitem="@layout/todo_item" />
 

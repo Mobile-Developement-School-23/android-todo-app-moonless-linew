@@ -41,4 +41,3 @@ private fun renamePriorityToData(priority: String): String {
         else -> throw IllegalArgumentException()
     }
 }
-

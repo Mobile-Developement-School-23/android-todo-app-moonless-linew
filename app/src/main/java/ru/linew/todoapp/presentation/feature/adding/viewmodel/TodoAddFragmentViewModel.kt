@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -55,7 +56,7 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
     }
 
     fun deleteButtonClicked(id: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.deleteTodoById(id)
             _currentEditStatus.value = EditStatus.Done
         }
@@ -79,7 +80,7 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
             }
         } else {
             mode = Mode.EDITING
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 _currentTodo.value = Result.Complete(repository.getTodoById(id))
 
             }
@@ -89,14 +90,14 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
     fun saveButtonClicked() {
         if (_currentEditStatus.value != EditStatus.InProcess)
             when (mode) {
-                Mode.CREATING -> viewModelScope.launch {
+                Mode.CREATING -> viewModelScope.launch(Dispatchers.IO) {
                     _currentEditStatus.value = EditStatus.InProcess
                     repository.addTodo((currentTodo.value as Result.Complete).result)
                     _currentEditStatus.value = EditStatus.Done
                     _currentTodo.value = Result.Loading
                 }
 
-                Mode.EDITING -> viewModelScope.launch {
+                Mode.EDITING -> viewModelScope.launch(Dispatchers.IO) {
                     _currentEditStatus.value = EditStatus.InProcess
                     repository.updateTodo((currentTodo.value as Result.Complete).result)
                     _currentEditStatus.value = EditStatus.Done

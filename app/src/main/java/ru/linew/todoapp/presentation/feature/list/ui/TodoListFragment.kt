@@ -36,7 +36,6 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         )
     }
 
-    //в onPause или добавить debounce
     private val checkBoxChangedCallback: (Boolean, TodoItem) -> Unit = { isCompleted, todoItem ->
         todoItem.isCompleted = isCompleted
         viewModel.todoCompleteStatusChanged(todoItem)
@@ -70,7 +69,6 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     }
 
     private fun updateList(todoList: List<TodoItem>, visibility: Boolean) {
-        binding.todoList.hideShimmer()
         binding.completedCounter.text =
             getString(R.string.completed, todoList.count { item -> item.isCompleted })
         if (visibility) {
@@ -95,18 +93,14 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         }
         viewModel.syncList()
         binding.todoList.adapter = adapter
-        binding.todoList.showShimmer()
         setupVisibilityButton()
         setupNewTodoFab()
-
-
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         exitTransition = null
         reenterTransition = null
-
     }
 
     private fun setupNewTodoFab() {
@@ -118,15 +112,6 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private fun setupVisibilityButton() {
         binding.visibilityIcon.apply {
             setOnClickListener {
-//                visibilityState = if (!visibilityState) {
-//                    setImageResource(R.drawable.visibility)
-//                    visibilityChangedCallback(true)
-//                    true
-//                } else {
-//                    setImageResource(R.drawable.visibility_off)
-//                    visibilityChangedCallback(false)
-//                    false
-//                }
                 viewModel.visibilityStateChanged()
             }
         }
