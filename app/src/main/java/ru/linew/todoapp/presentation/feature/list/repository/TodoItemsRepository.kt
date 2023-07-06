@@ -1,11 +1,11 @@
 package ru.linew.todoapp.presentation.feature.list.repository
 
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import ru.linew.todoapp.presentation.model.TodoItem
 
 interface TodoItemsRepository {
 
-    val todoListFlow: MutableStateFlow<List<TodoItem>>
+    val todoListFlow: StateFlow<List<TodoItem>>
     suspend fun addTodo(todoItem: TodoItem)
     suspend fun updateTodo(todoItem: TodoItem)
     suspend fun deleteTodoById(id: String)

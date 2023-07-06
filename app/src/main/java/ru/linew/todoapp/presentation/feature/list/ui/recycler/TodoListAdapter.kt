@@ -49,8 +49,8 @@ class TodoListAdapter(
             binding.root.setOnClickListener {
                 onTodoClick(binding.root, item)
             }
-            binding.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
-                onCheckBoxClick(isChecked, item)
+            binding.checkBox.setOnClickListener {
+                onCheckBoxClick(binding.checkBox.isChecked, item)
             }
 
         }
@@ -74,6 +74,9 @@ class TodoListAdapter(
             if (deadlineTime != null) {
                 binding.makeUntilTextView.text = deadlineTime.toDateFormat()
                 binding.makeUntilTextView.visibility = View.VISIBLE
+            }
+            else{
+                binding.makeUntilTextView.visibility = View.GONE
             }
         }
 
