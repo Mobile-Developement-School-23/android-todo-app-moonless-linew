@@ -11,18 +11,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.linew.todoapp.presentation.feature.adding.viewmodel.state.EditStatus
 import ru.linew.todoapp.presentation.feature.adding.viewmodel.state.Result
-import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
-import ru.linew.todoapp.presentation.model.Mode
+import ru.linew.todoapp.presentation.model.AddFragmentMode
 import ru.linew.todoapp.presentation.model.Priority
 import ru.linew.todoapp.presentation.model.TodoItem
+import ru.linew.todoapp.presentation.repository.TodoItemsRepository
 import java.util.*
 
-class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoItemsRepository) :
+class TodoAddFragmentViewModel @AssistedInject constructor(private val repository: TodoItemsRepository) :
     ViewModel() {
     @AssistedFactory
     interface TodoAddFragmentViewModelFactory {
         fun create(): TodoAddFragmentViewModel
     }
+
     @Suppress("UNCHECKED_CAST")
     class Factory(private val factory: TodoAddFragmentViewModelFactory) :
         ViewModelProvider.Factory {
@@ -31,7 +32,7 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
         }
     }
 
-    private lateinit var mode: Mode
+    private lateinit var mode: AddFragmentMode
 
     private val _currentTodo = MutableStateFlow<Result<TodoItem>>(Result.Loading)
     val currentTodo: StateFlow<Result<TodoItem>> = _currentTodo
@@ -72,8 +73,8 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
     fun saveButtonClicked() {
         if (_currentEditStatus.value != EditStatus.InProcess)
             when (mode) {
-                Mode.ADDING -> addTodo()
-                Mode.UPDATING -> updateTodo()
+                AddFragmentMode.ADDING -> addTodo()
+                AddFragmentMode.UPDATING -> updateTodo()
             }
     }
 
@@ -88,7 +89,7 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
     )
 
     private fun startUpdatingMode(id: String) {
-        mode = Mode.UPDATING
+        mode = AddFragmentMode.UPDATING
         viewModelScope.launch(Dispatchers.IO) {
             _currentTodo.value = Result.Complete(repository.getTodoById(id))
         }
@@ -104,7 +105,7 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
     }
 
     private fun startAddingMode() {
-        mode = Mode.ADDING
+        mode = AddFragmentMode.ADDING
         if (_currentTodo.value is Result.Loading) {
             _currentTodo.value = Result.Complete(
                 provideDefaultTodoItem()

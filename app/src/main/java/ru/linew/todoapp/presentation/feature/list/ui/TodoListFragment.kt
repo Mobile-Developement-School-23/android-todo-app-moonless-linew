@@ -14,8 +14,8 @@ import ru.linew.todoapp.databinding.FragmentTodoListBinding
 import ru.linew.todoapp.presentation.application.appComponent
 import ru.linew.todoapp.presentation.feature.list.ui.recycler.TodoListAdapter
 import ru.linew.todoapp.presentation.feature.list.viewmodel.TodoListFragmentViewModel
-import ru.linew.todoapp.presentation.feature.list.viewmodel.state.ErrorState
 import ru.linew.todoapp.presentation.feature.list.viewmodel.state.Result
+import ru.linew.todoapp.presentation.feature.list.viewmodel.state.SyncState
 import ru.linew.todoapp.presentation.model.TodoItem
 import ru.linew.todoapp.shared.Constants
 
@@ -54,11 +54,10 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
                 is Result.Success -> updateUi(it.result, it.visibility)
             }
         }
-
-        viewModel.errorState.observe(viewLifecycleOwner) {
+        viewModel.syncErrorState.observe(viewLifecycleOwner) {
             when (it) {
-                ErrorState.Error -> showErrorMessage()
-                ErrorState.Ok -> {}
+                SyncState.Error -> showErrorMessage()
+                SyncState.Ok -> {}
             }
         }
     }

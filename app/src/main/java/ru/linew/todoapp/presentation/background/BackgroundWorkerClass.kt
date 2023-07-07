@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import ru.linew.todoapp.data.model.exception.TodoSyncFailed
-import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
+import ru.linew.todoapp.presentation.repository.TodoItemsRepository
 
 class BackgroundWorkerClass constructor(
     context: Context,

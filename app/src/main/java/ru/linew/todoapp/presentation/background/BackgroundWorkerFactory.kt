@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
+import ru.linew.todoapp.presentation.repository.TodoItemsRepository
 import javax.inject.Inject
 
 class BackgroundWorkerFactory @Inject constructor(private val repository: TodoItemsRepository): WorkerFactory() {

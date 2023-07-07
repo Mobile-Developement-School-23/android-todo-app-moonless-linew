@@ -8,9 +8,9 @@ import ru.linew.todoapp.data.model.toUi
 import ru.linew.todoapp.data.repository.datasource.local.LocalDataSource
 import ru.linew.todoapp.data.repository.datasource.local.SharedPreferencesDataSource
 import ru.linew.todoapp.data.repository.datasource.remote.RemoteDataSource
-import ru.linew.todoapp.presentation.feature.list.repository.TodoItemsRepository
 import ru.linew.todoapp.presentation.model.TodoItem
 import ru.linew.todoapp.presentation.model.toDto
+import ru.linew.todoapp.presentation.repository.TodoItemsRepository
 import javax.inject.Inject
 
 
@@ -34,7 +34,6 @@ class TodoItemsRepositoryImpl @Inject constructor(
             )
         } catch (e: Exception) {
             sharedPreferencesDataSource.flagNeedSyncUp()
-            //throw TodoSyncFailed()
         } finally {
             localDataSource.addTodo(todoItem.toDto())
         }
@@ -49,7 +48,6 @@ class TodoItemsRepositoryImpl @Inject constructor(
 
         } catch (e: Exception) {
             sharedPreferencesDataSource.flagNeedSyncUp()
-            //throw TodoSyncFailed()
         }
     }
 
@@ -58,7 +56,6 @@ class TodoItemsRepositoryImpl @Inject constructor(
             remoteDataSource.deleteTodoById(id)
         } catch (e: Exception) {
             sharedPreferencesDataSource.flagNeedSyncUp()
-            //throw TodoSyncFailed()
         }
         finally {
             localDataSource.deleteTodoById(id)

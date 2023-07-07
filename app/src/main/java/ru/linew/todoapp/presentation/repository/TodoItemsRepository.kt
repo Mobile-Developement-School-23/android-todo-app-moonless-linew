@@ -1,4 +1,4 @@
-package ru.linew.todoapp.presentation.feature.list.repository
+package ru.linew.todoapp.presentation.repository
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.linew.todoapp.presentation.model.TodoItem
