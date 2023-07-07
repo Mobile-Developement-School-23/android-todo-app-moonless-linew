@@ -6,12 +6,12 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.linew.todoapp.data.network.TodoApiService
+import ru.linew.todoapp.di.scope.AppScope
 import ru.linew.todoapp.shared.Constants
-import javax.inject.Singleton
 
 @Module
 object ApiModule {
-    @Singleton
+    @AppScope
     @Provides
     fun provideRetrofitClient(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit

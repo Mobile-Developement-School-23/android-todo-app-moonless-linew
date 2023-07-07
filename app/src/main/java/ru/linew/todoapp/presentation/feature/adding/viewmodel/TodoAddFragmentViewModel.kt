@@ -23,7 +23,6 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
     interface TodoAddFragmentViewModelFactory {
         fun create(): TodoAddFragmentViewModel
     }
-
     @Suppress("UNCHECKED_CAST")
     class Factory(private val factory: TodoAddFragmentViewModelFactory) :
         ViewModelProvider.Factory {
@@ -64,46 +63,61 @@ class TodoAddFragmentViewModel @AssistedInject constructor(val repository: TodoI
 
     fun onCreate(id: String?) {
         if (id == null) {
-            mode = Mode.CREATING
-            if (_currentTodo.value is Result.Loading) {
-                _currentTodo.value = Result.Complete(
-                    TodoItem(
-                        UUID.randomUUID().toString(),
-                        "",
-                        Priority.NO,
-                        deadlineTime = null,
-                        isCompleted = false,
-                        creationTime = System.currentTimeMillis(),
-                        System.currentTimeMillis()
-                    )
-                )
-            }
+            startAddingMode()
         } else {
-            mode = Mode.EDITING
-            viewModelScope.launch(Dispatchers.IO) {
-                _currentTodo.value = Result.Complete(repository.getTodoById(id))
-
-            }
+            startUpdatingMode(id)
         }
     }
 
     fun saveButtonClicked() {
         if (_currentEditStatus.value != EditStatus.InProcess)
             when (mode) {
-                Mode.CREATING -> viewModelScope.launch(Dispatchers.IO) {
-                    _currentEditStatus.value = EditStatus.InProcess
-                    repository.addTodo((currentTodo.value as Result.Complete).result)
-                    _currentEditStatus.value = EditStatus.Done
-                    _currentTodo.value = Result.Loading
-                }
-
-                Mode.EDITING -> viewModelScope.launch(Dispatchers.IO) {
-                    _currentEditStatus.value = EditStatus.InProcess
-                    repository.updateTodo((currentTodo.value as Result.Complete).result)
-                    _currentEditStatus.value = EditStatus.Done
-                    _currentTodo.value = Result.Loading
-                }
+                Mode.ADDING -> addTodo()
+                Mode.UPDATING -> updateTodo()
             }
+    }
 
+    private fun provideDefaultTodoItem() = TodoItem(
+        UUID.randomUUID().toString(),
+        "",
+        Priority.NO,
+        deadlineTime = null,
+        isCompleted = false,
+        creationTime = System.currentTimeMillis(),
+        System.currentTimeMillis()
+    )
+
+    private fun startUpdatingMode(id: String) {
+        mode = Mode.UPDATING
+        viewModelScope.launch(Dispatchers.IO) {
+            _currentTodo.value = Result.Complete(repository.getTodoById(id))
+        }
+    }
+
+    private fun updateTodo() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _currentEditStatus.value = EditStatus.InProcess
+            repository.updateTodo((currentTodo.value as Result.Complete).result)
+            _currentEditStatus.value = EditStatus.Done
+            _currentTodo.value = Result.Loading
+        }
+    }
+
+    private fun startAddingMode() {
+        mode = Mode.ADDING
+        if (_currentTodo.value is Result.Loading) {
+            _currentTodo.value = Result.Complete(
+                provideDefaultTodoItem()
+            )
+        }
+    }
+
+    private fun addTodo() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _currentEditStatus.value = EditStatus.InProcess
+            repository.addTodo((currentTodo.value as Result.Complete).result)
+            _currentEditStatus.value = EditStatus.Done
+            _currentTodo.value = Result.Loading
+        }
     }
 }

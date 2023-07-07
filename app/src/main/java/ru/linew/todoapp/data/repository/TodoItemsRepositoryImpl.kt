@@ -59,7 +59,8 @@ class TodoItemsRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             sharedPreferencesDataSource.flagNeedSyncUp()
             //throw TodoSyncFailed()
-        } finally {
+        }
+        finally {
             localDataSource.deleteTodoById(id)
 
         }

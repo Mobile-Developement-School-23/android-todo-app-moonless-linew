@@ -6,18 +6,18 @@ import dagger.Module
 import dagger.Provides
 import ru.linew.todoapp.data.db.TodoDao
 import ru.linew.todoapp.data.db.TodoDataBase
-import javax.inject.Singleton
+import ru.linew.todoapp.di.scope.AppScope
 
 @Module
 object DatabaseModule {
 
-    @Singleton
+    @AppScope
     @Provides
     fun provideTracksDao(database: TodoDataBase): TodoDao{
         return database.provideTodoDao()
     }
 
-    @Singleton
+    @AppScope
     @Provides
     fun provideDataBase(context: Context): TodoDataBase{
         return Room.databaseBuilder(context,

@@ -71,13 +71,16 @@ class TodoListFragmentViewModel @AssistedInject constructor(
     }
 
     fun syncList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                repository.syncLocalListOfTodo()
-                _errorState.postValue(ErrorState.Ok)
-            } catch (e: TodoSyncFailed) {
-                _errorState.postValue(ErrorState.Error)
-            }
+        viewModelScope.launch() {
+            syncListInternal()
+        }
+    }
+    private suspend fun syncListInternal(){
+        try {
+            repository.syncLocalListOfTodo()
+            _errorState.postValue(ErrorState.Ok)
+        } catch (e: TodoSyncFailed) {
+            _errorState.postValue(ErrorState.Error)
         }
     }
 
@@ -90,6 +93,7 @@ class TodoListFragmentViewModel @AssistedInject constructor(
             repository.updateTodo(todoItem)
         }
     }
+
 
 
 }

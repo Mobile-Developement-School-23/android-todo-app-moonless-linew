@@ -21,9 +21,13 @@ import ru.linew.todoapp.shared.Constants
 
 class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private val binding: FragmentTodoListBinding by viewBinding()
+    private val component by lazy {
+        requireActivity().appComponent.listFragmentComponent()
+    }
+
     private val viewModel: TodoListFragmentViewModel by viewModels {
         TodoListFragmentViewModel.Factory(
-            requireActivity().appComponent.injectTodoListFragmentViewModel()
+            component.provideTodoListFragmentViewModel()
         )
     }
     private val itemClickCallback: (View, TodoItem) -> Unit = { view: View, todoItem: TodoItem ->
@@ -47,43 +51,18 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         viewModel.listTodos.observe(viewLifecycleOwner) {
             when (it) {
                 Result.Null -> {}
-                is Result.Success -> {
-                    updateList(it.result, it.visibility)
-                    updateVisibilityIcon(it.visibility)
-                }
+                is Result.Success -> updateUi(it.result, it.visibility)
             }
         }
 
         viewModel.errorState.observe(viewLifecycleOwner) {
             when (it) {
-                ErrorState.Error -> {
-                    Snackbar.make(
-                        binding.root, R.string.error, Snackbar.LENGTH_SHORT
-                    ).show()
-                    viewModel.errorShowed()
-                }
-
+                ErrorState.Error -> showErrorMessage()
                 ErrorState.Ok -> {}
             }
         }
     }
 
-    private fun updateList(todoList: List<TodoItem>, visibility: Boolean) {
-        binding.completedCounter.text =
-            getString(R.string.completed, todoList.count { item -> item.isCompleted })
-        if (visibility) {
-            adapter.submitList(todoList)
-        } else {
-            adapter.submitList(todoList.filter { item -> !item.isCompleted })
-        }
-    }
-    private fun updateVisibilityIcon(visibility: Boolean){
-        if (visibility){
-            binding.visibilityIcon.setImageResource(R.drawable.visibility)
-        }else{
-            binding.visibilityIcon.setImageResource(R.drawable.visibility_off)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,6 +75,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         setupVisibilityButton()
         setupNewTodoFab()
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -117,5 +97,33 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         }
     }
 
+    private fun updateRecyclerView(todoList: List<TodoItem>, visibility: Boolean) {
+        binding.completedCounter.text =
+            getString(R.string.completed, todoList.count { item -> item.isCompleted })
+        if (visibility) {
+            adapter.submitList(todoList)
+        } else {
+            adapter.submitList(todoList.filter { item -> !item.isCompleted })
+        }
+    }
 
+    private fun updateVisibilityIcon(visibility: Boolean) {
+        if (visibility) {
+            binding.visibilityIcon.setImageResource(R.drawable.visibility)
+        } else {
+            binding.visibilityIcon.setImageResource(R.drawable.visibility_off)
+        }
+    }
+
+    private fun showErrorMessage() {
+        Snackbar.make(
+            binding.root, R.string.error, Snackbar.LENGTH_SHORT
+        ).show()
+        viewModel.errorShowed()
+    }
+
+    private fun updateUi(list: List<TodoItem>, visibility: Boolean) {
+        updateRecyclerView(list, visibility)
+        updateVisibilityIcon(visibility)
+    }
 }

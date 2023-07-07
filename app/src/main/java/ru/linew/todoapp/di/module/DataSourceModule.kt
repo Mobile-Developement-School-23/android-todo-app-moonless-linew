@@ -20,6 +20,8 @@ interface DataSourceModule {
     fun bindLocalDataSource(localDataSourceImpl: LocalDataSourceImpl): LocalDataSource
 
     @Binds
-    fun bindSharedPreferencesDataSource(sharedPreferencesDataSource: SharedPreferencesDataSourceImpl): SharedPreferencesDataSource
+    fun bindSharedPreferencesDataSource(
+        sharedPreferencesDataSource: SharedPreferencesDataSourceImpl
+    ): SharedPreferencesDataSource
 
 }

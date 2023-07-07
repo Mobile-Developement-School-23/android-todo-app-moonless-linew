@@ -1,4 +1,4 @@
-package ru.linew.todoapp.presentation.feature.background
+package ru.linew.todoapp.presentation.background
 
 import android.content.Context
 import androidx.work.ListenableWorker

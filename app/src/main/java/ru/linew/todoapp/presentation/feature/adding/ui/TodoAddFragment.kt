@@ -28,9 +28,12 @@ import ru.linew.todoapp.shared.Constants
 
 class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
     private val binding: FragmentTodoAddBinding by viewBinding()
+    private val component by lazy {
+        requireActivity().appComponent.addFragmentComponent()
+    }
     private val viewModel: TodoAddFragmentViewModel by viewModels {
         TodoAddFragmentViewModel.Factory(
-            requireActivity().appComponent.injectTodoAddFragmentViewModel()
+            component.provideTodoAddFragmentViewModel()
         )
     }
     private val menu by lazy {
@@ -39,18 +42,9 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
             it.setForceShowIcon(true)
             it.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    R.id.high_item -> {
-                        viewModel.todoPriorityChanged(Priority.HIGH)
-                    }
-
-                    R.id.no_item -> {
-                        viewModel.todoPriorityChanged(Priority.NO)
-                    }
-
-                    R.id.low_item -> {
-                        viewModel.todoPriorityChanged(Priority.LOW)
-                    }
-
+                    R.id.high_item -> viewModel.todoPriorityChanged(Priority.HIGH)
+                    R.id.no_item -> viewModel.todoPriorityChanged(Priority.NO)
+                    R.id.low_item -> viewModel.todoPriorityChanged(Priority.LOW)
                 }
                 binding.currentPriority.text = menuItem.title
                 return@setOnMenuItemClickListener true
@@ -67,43 +61,20 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
         arguments?.getString(Constants.TODO_ID_ARGUMENT_KEY)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.onCreate(itemId)
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
         }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-            viewModel.currentTodo.collect{
-                    if (it is Result.Complete){
-                        loadFromViewModel(it.result)
-                    }
-                }
-
-            }
-
-        }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.currentEditStatus.collect{
-                    when(it){
-                        EditStatus.InProcess -> {}
-                        EditStatus.Null -> {}
-                        EditStatus.Done -> findNavController().navigateUp()
-                    }
-
-                }
-            }
-        }
+        setupTodoDataListener()
+        setupExitListener()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
     }
-
 
     private fun setupUi() {
         //loadFromViewModel()
@@ -140,7 +111,9 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
                 viewModel.saveButtonClicked()
             }
             deleteButton.setOnClickListener {
-                viewModel.deleteButtonClicked(arguments?.getString(Constants.TODO_ID_ARGUMENT_KEY, "")!!)
+                viewModel.deleteButtonClicked(
+                    arguments?.getString(Constants.TODO_ID_ARGUMENT_KEY, "")!!
+                )
             }
             if (arguments == null) {
                 binding.deleteButton.visibility = View.INVISIBLE
@@ -157,17 +130,15 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
     }
 
     private fun setupMakeUntilSwitch() {
-        with(binding.makeUntilSwitch) {
-            isSaveEnabled = false
-            setOnClickListener {
-                if (isChecked) {
-                    datePicker.show(parentFragmentManager, null)
-                } else {
-                    binding.makeUntil.visibility = View.INVISIBLE
-                    viewModel.todoDeadlineTimeChanged(null)
-                }
+        binding.makeUntilSwitch.setOnClickListener {
+            if (binding.makeUntilSwitch.isChecked) {
+                datePicker.show(parentFragmentManager, null)
+            } else {
+                binding.makeUntil.visibility = View.INVISIBLE
+                viewModel.todoDeadlineTimeChanged(null)
             }
         }
+
     }
 
     private fun setupPriorityButton() {
@@ -194,12 +165,34 @@ class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
                 setMakeUntilDate(it)
 
                 makeUntil.visibility = View.VISIBLE
-
             }
         }
     }
 
     private fun setMakeUntilDate(millis: Long) {
         binding.makeUntil.text = millis.toDateFormat()
+    }
+
+    private fun setupExitListener() = lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.currentEditStatus.collect {
+                when (it) {
+                    EditStatus.InProcess -> {}
+                    EditStatus.Null -> {}
+                    EditStatus.Done -> findNavController().navigateUp()
+                }
+
+            }
+        }
+    }
+
+    private fun setupTodoDataListener() = lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.currentTodo.collect {
+                if (it is Result.Complete) {
+                    loadFromViewModel(it.result)
+                }
+            }
+        }
     }
 }
