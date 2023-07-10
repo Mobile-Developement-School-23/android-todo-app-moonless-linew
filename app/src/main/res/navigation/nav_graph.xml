@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/todoAddFragment"
-        android:name="ru.linew.todoapp.presentation.feature.adding.ui.TodoAddFragment"
+        android:name="ru.linew.todoapp.presentation.feature.adding.ui.compose.TodoAddFragmentCompose"
         android:label="TodoAddFragment"
         tools:layout="@layout/fragment_todo_add"/>
 </navigation>
