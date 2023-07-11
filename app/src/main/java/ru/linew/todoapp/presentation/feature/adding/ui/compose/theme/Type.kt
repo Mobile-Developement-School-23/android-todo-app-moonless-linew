@@ -1,6 +1,6 @@
 package ru.linew.todoapp.presentation.feature.adding.ui.compose.theme
 
-import androidx.compose.material3.Typography
+import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
@@ -19,7 +19,7 @@ val Typography.title: TextStyle
         lineHeight = 32.sp,
         color = YandexTodoTheme.colors.labelPrimary
     )
-val Typography.button: TextStyle
+val Typography.buttonText: TextStyle
     @Composable
     get() = TextStyle(
         fontSize = 14.sp,
