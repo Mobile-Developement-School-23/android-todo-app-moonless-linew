@@ -24,7 +24,9 @@
     <string name="auth_dialog_positive">Да</string>
     <string name="auth_dialog_negative">Нет</string>
     <string name="auth_dialog_neutral">Больше не спрашивай</string>
-
+    <string name="priority_icon_description">Priority icon</string>
+    <string name="ok">Ок</string>
+    <string name="cancel">Отмена</string>
 
 
 </resources>

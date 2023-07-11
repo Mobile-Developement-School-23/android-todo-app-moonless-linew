@@ -21,7 +21,7 @@ class TodoAddFragmentCompose: Fragment() {
         _binding = FragmentTodoAddComposeBinding.inflate(inflater, container, false)
         binding.composeView.apply {
             setContent {
-                AddTodoUiTheme()
+                AddTodoUiWithTheme()
             }
         }
         return binding.root

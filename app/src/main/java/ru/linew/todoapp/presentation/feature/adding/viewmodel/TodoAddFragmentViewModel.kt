@@ -23,7 +23,6 @@ class TodoAddFragmentViewModel @AssistedInject constructor(private val repositor
     interface TodoAddFragmentViewModelFactory {
         fun create(): TodoAddFragmentViewModel
     }
-
     @Suppress("UNCHECKED_CAST")
     class Factory(private val factory: TodoAddFragmentViewModelFactory) :
         ViewModelProvider.Factory {

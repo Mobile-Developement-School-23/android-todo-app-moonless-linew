@@ -1,6 +1,6 @@
-
 package ru.linew.todoapp.presentation.feature.adding.ui.compose
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +15,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
@@ -27,22 +26,29 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Surface
 import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.MaterialDialogState
+import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import ru.linew.todoapp.presentation.feature.adding.ui.compose.theme.YandexTodoTheme
@@ -53,7 +59,7 @@ import ru.linew.todoapp.presentation.feature.adding.ui.compose.theme.subhead
 
 @Preview
 @Composable
-fun AddTodoUiTheme() {
+fun AddTodoUiWithTheme() {
     YandexTodoTheme {
         Surface(
             modifier = Modifier
@@ -69,27 +75,37 @@ fun AddTodoUiTheme() {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddTodoUi() {
-    val sheetState = rememberModalBottomSheetState( ModalBottomSheetValue.Hidden )
+    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val dialogState = rememberMaterialDialogState()
+    val checkState = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    TodoPriorityChooserBottomSheet(sheetState = sheetState) {
-        Column {
-            TodoToolBar()
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(top = 8.dp)
-            ) {
-                TodoCardTextEdit()
-                TodoChoosePriorityButton(sheetState, coroutineScope)
-                TodoMakeUntilDivider()
-                TodoMakeUntilSwitch()
-                TodoDeleteDivider()
-                TodoDeleteButton()
+    if (checkState.value){
+        dialogState.show()
+    }
+
+        TodoPriorityChooserBottomSheet(sheetState = sheetState, coroutineScope = coroutineScope) {
+            Column {
+                TodoToolBar()
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(top = 8.dp)
+                ) {
+                    TodoCardTextEdit()
+                    TodoChoosePriorityButton(sheetState, coroutineScope)
+                    TodoMakeUntilDivider()
+                    TodoMakeUntilSwitch(checkState = checkState)
+                    TodoDeleteDivider()
+                    TodoDeleteButton()
+                    TodoDatePicker(dialogState = dialogState) {
+                        
+                    }
+                }
             }
         }
-    }
+
 
 }
 
@@ -135,8 +151,8 @@ fun TodoMakeUntilDivider() {
 }
 
 @Composable
-fun TodoMakeUntilSwitch() {
-    val isChecked = remember { mutableStateOf(true) }
+fun TodoMakeUntilSwitch(checkState: MutableState<Boolean>) {
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -153,8 +169,11 @@ fun TodoMakeUntilSwitch() {
                 style = MaterialTheme.typography.buttonText
             )
         }
-        //импортировал второй материал только ради этого свитча
-        Switch(checked = isChecked.value, onCheckedChange = { isChecked.value = !isChecked.value })
+        Switch(
+            checked = checkState.value,
+            onCheckedChange = { checkState.value = !checkState.value },
+            colors = SwitchDefaults.colors(checkedThumbColor = YandexTodoTheme.colors.colorBlue)
+        )
     }
 }
 
@@ -251,20 +270,58 @@ fun TodoToolBar() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TodoPriorityChooserBottomSheet(sheetState: ModalBottomSheetState, content: @Composable () -> Unit) {
+fun TodoPriorityChooserBottomSheet(
+    sheetState: ModalBottomSheetState,
+    coroutineScope: CoroutineScope,
+    content: @Composable () -> Unit
+
+) {
 
     ModalBottomSheetLayout(
         sheetState = sheetState,
+        sheetBackgroundColor = YandexTodoTheme.colors.backPrimary,
         sheetContent = {
-            Button(onClick = { }) {
+            TodoPriorityItem(
+                text = stringResource(id = R.string.low),
+                painter = painterResource(id = R.drawable.low_priority)
+            ) { coroutineScope.launch { sheetState.hide() } }
+            TodoPriorityItem(
+                text = stringResource(id = R.string.no),
+                painter = null
+            ) { coroutineScope.launch { sheetState.hide() } }
 
-            }
-            Button(onClick = { }) {
+            TodoPriorityItem(
+                text = stringResource(id = R.string.high),
+                painter = painterResource(id = R.drawable.high_priority)
+            ) { coroutineScope.launch { sheetState.hide() } }
 
-            }
-            Button(onClick = { }) {
+        }, content = content
+    )
+}
 
-            }
-        }
-    , content = content)
+@Composable
+fun TodoPriorityItem(text: String, painter: Painter?, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(16.dp)
+    ) {
+        if (painter != null) Image(
+            painter = painter,
+            contentDescription = stringResource(id = R.string.priority_icon_description)
+        )
+        Text(text = text, color = YandexTodoTheme.colors.labelPrimary)
+    }
+}
+
+@Composable
+fun TodoDatePicker(dialogState: MaterialDialogState, content: @Composable () -> Unit) {
+    MaterialDialog(dialogState = dialogState, buttons = {
+        positiveButton(text = stringResource(id = R.string.ok))
+        negativeButton(text = stringResource(id = R.string.cancel))
+    }) {
+        content()
+        datepicker()
+    }
 }
