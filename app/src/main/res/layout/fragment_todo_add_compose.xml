@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/back_primary"
+    android:transitionName="@string/card_edit_transition">
+    <androidx.compose.ui.platform.ComposeView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id = "@+id/compose_view">
+    </androidx.compose.ui.platform.ComposeView>
+</androidx.cardview.widget.CardView>

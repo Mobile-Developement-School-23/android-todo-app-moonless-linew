@@ -19,11 +19,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         appComponent.injectMainActivity(this)
+
         if (sharedPreferences.getString(Constants.SHARED_PREFERENCES_UNIQUE_ID_KEY, null) == null) {
             sharedPreferences.edit()
                 .putString(Constants.SHARED_PREFERENCES_UNIQUE_ID_KEY, UUID.randomUUID().toString())
                 .apply()
         }
+
     }
 
 }
