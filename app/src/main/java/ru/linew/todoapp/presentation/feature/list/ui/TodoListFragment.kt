@@ -8,9 +8,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.FragmentTodoListBinding
+import ru.linew.todoapp.presentation.activity.MainActivity
 import ru.linew.todoapp.presentation.application.appComponent
 import ru.linew.todoapp.presentation.feature.list.ui.recycler.TodoListAdapter
 import ru.linew.todoapp.presentation.feature.list.viewmodel.TodoListFragmentViewModel
@@ -39,6 +41,8 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             R.id.action_todoListFragment_to_todoAddFragment, bundle, null, extras
         )
     }
+
+
 
     private val checkBoxChangedCallback: (Boolean, TodoItem) -> Unit = { isCompleted, todoItem ->
         todoItem.isCompleted = isCompleted
@@ -71,6 +75,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         }
         viewModel.syncList()
         binding.todoList.adapter = adapter
+        setupSettingButton()
         setupVisibilityButton()
         setupNewTodoFab()
     }
@@ -124,5 +129,11 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private fun updateUi(list: List<TodoItem>, visibility: Boolean) {
         updateRecyclerView(list, visibility)
         updateVisibilityIcon(visibility)
+    }
+
+    private fun setupSettingButton(){
+        binding.settingsIcon.setOnClickListener {
+            (requireActivity() as MainActivity).showSettingsDialog()
+        }
     }
 }

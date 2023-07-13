@@ -8,6 +8,7 @@ object Constants {
     const val SHARED_PREFERENCES_UNIQUE_ID_KEY = "device_id"
     const val SHARED_PREFERENCES_AUTH_STATE_KEY = "auth_state"
     const val SHARED_PREFERENCES_TOKEN_KEY = "token"
+    const val SHARED_PREFERENCES_THEME_KEY = "theme"
 
 
     const val BACKGROUND_WORK_NAME = "ListUpdater"
