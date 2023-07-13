@@ -1,4 +1,4 @@
-package ru.linew.todoapp.presentation.feature.adding.ui.compose.theme
+package ru.linew.todoapp.presentation.feature.adding.compose.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable

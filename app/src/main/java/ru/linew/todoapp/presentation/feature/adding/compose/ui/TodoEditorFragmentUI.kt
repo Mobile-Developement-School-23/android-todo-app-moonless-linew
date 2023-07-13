@@ -1,4 +1,4 @@
-package ru.linew.todoapp.presentation.feature.adding.ui.compose
+package ru.linew.todoapp.presentation.feature.adding.compose.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -34,6 +34,7 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,7 +44,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.MaterialDialogState
@@ -51,60 +51,110 @@ import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import ru.linew.todoapp.presentation.feature.adding.ui.compose.theme.YandexTodoTheme
+import ru.linew.todoapp.presentation.feature.adding.compose.theme.YandexTodoTheme
 import ru.linew.todoapp.R
-import ru.linew.todoapp.presentation.feature.adding.ui.compose.theme.body
-import ru.linew.todoapp.presentation.feature.adding.ui.compose.theme.buttonText
-import ru.linew.todoapp.presentation.feature.adding.ui.compose.theme.subhead
+import ru.linew.todoapp.presentation.feature.adding.compose.theme.body
+import ru.linew.todoapp.presentation.feature.adding.compose.theme.buttonText
+import ru.linew.todoapp.presentation.feature.adding.compose.theme.subhead
+import ru.linew.todoapp.presentation.feature.adding.view.viewmodel.state.Result
+import ru.linew.todoapp.presentation.model.EditFragmentMode
+import ru.linew.todoapp.presentation.model.Priority
+import ru.linew.todoapp.presentation.model.TodoItem
+import ru.linew.todoapp.presentation.utils.toDateFormat
+import java.time.LocalDate
+import java.time.ZoneOffset
 
-@Preview
+typealias UiState = State<Result<TodoItem>>
+
 @Composable
-fun AddTodoUiWithTheme() {
+fun TodoEditorUiWithTheme(
+    uiState: UiState,
+    mode: EditFragmentMode,
+    onBodyTextChanged: (String) -> Unit,
+    onCloseButtonClick: () -> Unit,
+    onDateChange: (Long?) -> Unit,
+    onSaveButtonClick: () -> Unit,
+    onDeleteButtonClick: () -> Unit,
+    onPriorityItemClick: (Priority) -> Unit
+) {
     YandexTodoTheme {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .systemBarsPadding(), color = YandexTodoTheme.colors.backPrimary
+                .systemBarsPadding(),
+            color = YandexTodoTheme.colors.backPrimary
         ) {
-            AddTodoUi()
-        }
-    }
-}
-
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun AddTodoUi() {
-    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-    val dialogState = rememberMaterialDialogState()
-    val checkState = remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
-    if (checkState.value){
-        dialogState.show()
-    }
-
-        TodoPriorityChooserBottomSheet(sheetState = sheetState, coroutineScope = coroutineScope) {
-            Column {
-                TodoToolBar()
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .padding(top = 8.dp)
-                ) {
-                    TodoCardTextEdit()
-                    TodoChoosePriorityButton(sheetState, coroutineScope)
-                    TodoMakeUntilDivider()
-                    TodoMakeUntilSwitch(checkState = checkState)
-                    TodoDeleteDivider()
-                    TodoDeleteButton()
-                    TodoDatePicker(dialogState = dialogState) {
-                        
-                    }
-                }
+            if (uiState.value is Result.Complete<TodoItem>) {
+                TodoEditorUi(
+                    (uiState.value as Result.Complete).result,
+                    mode,
+                    onBodyTextChanged,
+                    onCloseButtonClick,
+                    onDateChange,
+                    onSaveButtonClick,
+                    onDeleteButtonClick,
+                    onPriorityItemClick
+                )
             }
         }
+    }
+}
+
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun TodoEditorUi(
+    uiState: TodoItem,
+    editMode: EditFragmentMode,
+    onBodyTextChanged: (String) -> Unit,
+    onCloseButtonClick: () -> Unit,
+    onDateChange: (Long?) -> Unit,
+    onSaveButtonClick: () -> Unit,
+    onDeleteButtonClick: () -> Unit,
+    onPriorityItemClick: (Priority) -> Unit
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val datePickerDialogState = rememberMaterialDialogState()
+    val deadlineState = remember { mutableStateOf(uiState.deadlineTime) }
+    val bodyText = remember { mutableStateOf(uiState.body) }
+    val checkState = remember { mutableStateOf(deadlineState.value != null) }
+    val priority = remember { mutableStateOf(uiState.priority) }
+
+
+
+    TodoPriorityChooserBottomSheet(
+        sheetState = sheetState,
+        coroutineScope = coroutineScope,
+        onPriorityItemClick = { onPriorityItemClick(it); priority.value = it }) {
+        Column {
+            TodoToolBar(onCloseButtonClick, onSaveButtonClick)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(top = 8.dp)
+            ) {
+                TodoCardTextEdit(bodyText.value) { onBodyTextChanged(it); bodyText.value = it }
+                TodoChoosePriorityButton(sheetState, coroutineScope, priority.value)
+                TodoMakeUntilDivider()
+                TodoMakeUntilSwitch(checkState = checkState, deadlineState = deadlineState, onCheckChange = {
+                    checkState.value = it
+                    if(!it) onDateChange(null) else datePickerDialogState.show()
+                })
+                TodoDeleteDivider()
+                if (editMode == EditFragmentMode.UPDATING) {
+                    TodoDeleteButton(onDeleteButtonClick)
+                }
+
+                TodoDatePicker(dialogState = datePickerDialogState,
+                    onDateChange = { onDateChange(it); deadlineState.value = it },
+                    onNegativeButtonClick = { checkState.value = false })
+            }
+        }
+    }
 
 
 }
@@ -112,7 +162,16 @@ fun AddTodoUi() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TodoChoosePriorityButton(sheetState: ModalBottomSheetState, coroutineScope: CoroutineScope) {
+fun TodoChoosePriorityButton(
+    sheetState: ModalBottomSheetState,
+    coroutineScope: CoroutineScope,
+    priority: Priority
+) {
+    val id = when (priority) {
+        Priority.LOW -> R.string.low
+        Priority.NO -> R.string.no
+        Priority.HIGH -> R.string.high
+    }
     Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center,
@@ -122,13 +181,12 @@ fun TodoChoosePriorityButton(sheetState: ModalBottomSheetState, coroutineScope: 
             .clickable(
                 interactionSource = remember {
                     MutableInteractionSource()
-                },
-                indication = rememberRipple(color = YandexTodoTheme.colors.labelPrimary)
+                }, indication = rememberRipple(color = YandexTodoTheme.colors.labelPrimary)
             ) { coroutineScope.launch { sheetState.show() } }
             .padding(12.dp),
     ) {
         Text(text = stringResource(id = R.string.priority), style = MaterialTheme.typography.body)
-        Text(text = stringResource(id = R.string.no), style = MaterialTheme.typography.subhead)
+        Text(text = stringResource(id = id), style = MaterialTheme.typography.subhead)
     }
 }
 
@@ -151,7 +209,11 @@ fun TodoMakeUntilDivider() {
 }
 
 @Composable
-fun TodoMakeUntilSwitch(checkState: MutableState<Boolean>) {
+fun TodoMakeUntilSwitch(
+    checkState: MutableState<Boolean>,
+    deadlineState: MutableState<Long?>,
+    onCheckChange: (Boolean) -> Unit
+) {
 
     Row(
         modifier = Modifier
@@ -164,14 +226,16 @@ fun TodoMakeUntilSwitch(checkState: MutableState<Boolean>) {
                 text = stringResource(id = R.string.make_until),
                 style = MaterialTheme.typography.body
             )
-            Text(
-                text = stringResource(id = R.string.test_date),
-                style = MaterialTheme.typography.buttonText
-            )
+            if (deadlineState.value != null) {
+                Text(
+                    text = deadlineState.value!!.toDateFormat(),
+                    style = MaterialTheme.typography.buttonText
+                )
+            }
         }
         Switch(
             checked = checkState.value,
-            onCheckedChange = { checkState.value = !checkState.value },
+            onCheckedChange = { onCheckChange(it); deadlineState.value = null },
             colors = SwitchDefaults.colors(checkedThumbColor = YandexTodoTheme.colors.colorBlue)
         )
     }
@@ -179,19 +243,15 @@ fun TodoMakeUntilSwitch(checkState: MutableState<Boolean>) {
 
 
 @Composable
-fun TodoDeleteButton() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                interactionSource = remember {
-                    MutableInteractionSource()
-                },
-                indication = rememberRipple(color = YandexTodoTheme.colors.labelPrimary)
-            ) { }
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+fun TodoDeleteButton(onDeleteButtonClick: () -> Unit) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .clickable(
+            interactionSource = remember {
+                MutableInteractionSource()
+            }, indication = rememberRipple(color = YandexTodoTheme.colors.labelPrimary)
+        ) { onDeleteButtonClick() }
+        .padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource(id = R.drawable.delete),
             contentDescription = null,
@@ -207,8 +267,7 @@ fun TodoDeleteButton() {
 }
 
 @Composable
-fun TodoCardTextEdit() {
-    val input = remember { mutableStateOf("") }
+fun TodoCardTextEdit(bodyText: String, onBodyTextChanged: (String) -> Unit) {
     Card(
         backgroundColor = YandexTodoTheme.colors.backSecondary,
         shape = RoundedCornerShape(16.dp),
@@ -217,9 +276,8 @@ fun TodoCardTextEdit() {
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-        BasicTextField(
-            value = input.value,
-            onValueChange = { input.value = it },
+        BasicTextField(value = bodyText,
+            onValueChange = { onBodyTextChanged(it) },
             modifier = Modifier
                 .defaultMinSize(minHeight = 104.dp)
                 .padding(8.dp)
@@ -227,25 +285,22 @@ fun TodoCardTextEdit() {
             textStyle = MaterialTheme.typography.body,
             cursorBrush = SolidColor(YandexTodoTheme.colors.labelPrimary),
             decorationBox = {
-                if (input.value.isEmpty()) Text(
+                if (bodyText.isEmpty()) Text(
                     text = stringResource(id = R.string.what_to_do),
                     color = YandexTodoTheme.colors.labelTertiary
                 )
                 it.invoke()
-            }
-        )
+            })
     }
 }
 
 @Composable
-fun TodoToolBar() {
-    TopAppBar(
-        title = {},
+fun TodoToolBar(onCloseButtonClick: () -> Unit, onSaveButtonClick: () -> Unit) {
+    TopAppBar(title = {},
         elevation = 0.dp,
         backgroundColor = YandexTodoTheme.colors.backPrimary,
         navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }
-            ) {
+            IconButton(onClick = { onCloseButtonClick() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.close),
                     contentDescription = null,
@@ -255,7 +310,7 @@ fun TodoToolBar() {
 
         },
         actions = {
-            TextButton(onClick = { }) {
+            TextButton(onClick = { onSaveButtonClick() }) {
                 Text(
                     text = stringResource(id = R.string.save),
                     color = YandexTodoTheme.colors.colorBlue,
@@ -273,8 +328,8 @@ fun TodoToolBar() {
 fun TodoPriorityChooserBottomSheet(
     sheetState: ModalBottomSheetState,
     coroutineScope: CoroutineScope,
+    onPriorityItemClick: (Priority) -> Unit,
     content: @Composable () -> Unit
-
 ) {
 
     ModalBottomSheetLayout(
@@ -283,30 +338,42 @@ fun TodoPriorityChooserBottomSheet(
         sheetContent = {
             TodoPriorityItem(
                 text = stringResource(id = R.string.low),
+                priority = Priority.LOW,
                 painter = painterResource(id = R.drawable.low_priority)
-            ) { coroutineScope.launch { sheetState.hide() } }
+            ) {
+                coroutineScope.launch { sheetState.hide() }
+                onPriorityItemClick(it)
+            }
             TodoPriorityItem(
-                text = stringResource(id = R.string.no),
-                painter = null
-            ) { coroutineScope.launch { sheetState.hide() } }
+                text = stringResource(id = R.string.no), priority = Priority.NO, painter = null
+            ) {
+                coroutineScope.launch { sheetState.hide() }
+                onPriorityItemClick(it)
+            }
 
             TodoPriorityItem(
                 text = stringResource(id = R.string.high),
+                priority = Priority.HIGH,
                 painter = painterResource(id = R.drawable.high_priority)
-            ) { coroutineScope.launch { sheetState.hide() } }
+            ) {
+                coroutineScope.launch { sheetState.hide() }
+                onPriorityItemClick(it)
+            }
 
-        }, content = content
+
+        },
+        content = content
     )
 }
 
 @Composable
-fun TodoPriorityItem(text: String, painter: Painter?, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(16.dp)
-    ) {
+fun TodoPriorityItem(
+    text: String, priority: Priority, painter: Painter?, onPriorityItemClick: (Priority) -> Unit
+) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .clickable { onPriorityItemClick(priority) }
+        .padding(16.dp)) {
         if (painter != null) Image(
             painter = painter,
             contentDescription = stringResource(id = R.string.priority_icon_description)
@@ -316,12 +383,20 @@ fun TodoPriorityItem(text: String, painter: Painter?, onClick: () -> Unit) {
 }
 
 @Composable
-fun TodoDatePicker(dialogState: MaterialDialogState, content: @Composable () -> Unit) {
+fun TodoDatePicker(
+    dialogState: MaterialDialogState,
+    onNegativeButtonClick: () -> Unit,
+    onDateChange: (Long) -> Unit
+) {
     MaterialDialog(dialogState = dialogState, buttons = {
         positiveButton(text = stringResource(id = R.string.ok))
-        negativeButton(text = stringResource(id = R.string.cancel))
+        negativeButton(text = stringResource(id = R.string.cancel),
+            onClick = { onNegativeButtonClick() })
     }) {
-        content()
-        datepicker()
+        datepicker {
+            onDateChange(it.toUnixTime())
+        }
     }
 }
+
+fun LocalDate.toUnixTime(): Long = this.atStartOfDay().toInstant(ZoneOffset.UTC).epochSecond * 1000

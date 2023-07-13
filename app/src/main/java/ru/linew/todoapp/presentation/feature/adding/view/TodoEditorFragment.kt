@@ -1,4 +1,4 @@
-package ru.linew.todoapp.presentation.feature.adding.ui
+package ru.linew.todoapp.presentation.feature.adding.view
 
 import android.graphics.Color
 import android.os.Bundle
@@ -18,22 +18,22 @@ import kotlinx.coroutines.launch
 import ru.linew.todoapp.R
 import ru.linew.todoapp.databinding.FragmentTodoAddBinding
 import ru.linew.todoapp.presentation.application.appComponent
-import ru.linew.todoapp.presentation.feature.adding.viewmodel.TodoAddFragmentViewModel
-import ru.linew.todoapp.presentation.feature.adding.viewmodel.state.EditStatus
-import ru.linew.todoapp.presentation.feature.adding.viewmodel.state.Result
+import ru.linew.todoapp.presentation.feature.adding.view.viewmodel.TodoEditorViewModel
+import ru.linew.todoapp.presentation.feature.adding.view.viewmodel.state.EditStatus
+import ru.linew.todoapp.presentation.feature.adding.view.viewmodel.state.Result
 import ru.linew.todoapp.presentation.model.Priority
 import ru.linew.todoapp.presentation.model.TodoItem
 import ru.linew.todoapp.presentation.utils.toDateFormat
 import ru.linew.todoapp.shared.Constants
 
-class TodoAddFragment : Fragment(R.layout.fragment_todo_add) {
+class TodoEditorFragment : Fragment(R.layout.fragment_todo_add) {
     private val binding: FragmentTodoAddBinding by viewBinding()
     private val component by lazy {
         requireActivity().appComponent.addFragmentComponent()
     }
-    private val viewModel: TodoAddFragmentViewModel by viewModels {
-        TodoAddFragmentViewModel.Factory(
-            component.provideTodoAddFragmentViewModel()
+    private val viewModel: TodoEditorViewModel by viewModels {
+        TodoEditorViewModel.Factory(
+            component.provideTodoEditorViewModel()
         )
     }
     private val menu by lazy {

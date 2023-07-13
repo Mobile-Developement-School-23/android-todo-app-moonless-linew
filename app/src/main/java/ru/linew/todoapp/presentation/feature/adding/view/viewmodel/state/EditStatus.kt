@@ -1,4 +1,4 @@
-package ru.linew.todoapp.presentation.feature.adding.viewmodel.state
+package ru.linew.todoapp.presentation.feature.adding.view.viewmodel.state
 
 sealed class EditStatus {
     object Null : EditStatus()

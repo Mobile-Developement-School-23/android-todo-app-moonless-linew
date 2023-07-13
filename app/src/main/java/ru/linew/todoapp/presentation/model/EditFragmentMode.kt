@@ -1,5 +1,5 @@
 package ru.linew.todoapp.presentation.model
 
-enum class AddFragmentMode {
+enum class EditFragmentMode {
     ADDING, UPDATING
 }

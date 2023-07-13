@@ -17,6 +17,6 @@ import ru.linew.todoapp.presentation.background.BackgroundWorkerFactory
 interface AppComponent {
     fun injectMainActivity(activity: MainActivity)
     fun provideWorkerFactory(): BackgroundWorkerFactory
-    fun addFragmentComponent(): AddFragmentComponent
+    fun addFragmentComponent(): EditorFragmentComponent
     fun listFragmentComponent(): ListFragmentComponent
 }
