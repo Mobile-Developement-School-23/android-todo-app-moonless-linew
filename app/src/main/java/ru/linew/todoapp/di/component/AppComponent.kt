@@ -9,7 +9,8 @@ import ru.linew.todoapp.di.module.DatabaseModule
 import ru.linew.todoapp.di.module.RepositoryModule
 import ru.linew.todoapp.di.scope.AppScope
 import ru.linew.todoapp.presentation.activity.MainActivity
-import ru.linew.todoapp.presentation.background.BackgroundWorkerFactory
+import ru.linew.todoapp.presentation.background.repository.DeadlineTodoProvider
+import ru.linew.todoapp.presentation.background.sync.BackgroundWorkerFactory
 
 @AppScope
 @Component(modules = [RepositoryModule::class, ApplicationModule::class, ClientModule::class,
@@ -17,6 +18,7 @@ import ru.linew.todoapp.presentation.background.BackgroundWorkerFactory
 interface AppComponent {
     fun injectMainActivity(activity: MainActivity)
     fun provideWorkerFactory(): BackgroundWorkerFactory
+    fun provideDeadlineTodoProvider(): DeadlineTodoProvider
     fun addFragmentComponent(): EditorFragmentComponent
     fun listFragmentComponent(): ListFragmentComponent
 }

@@ -8,9 +8,11 @@ import ru.linew.todoapp.data.model.toUi
 import ru.linew.todoapp.data.repository.datasource.local.LocalDataSource
 import ru.linew.todoapp.data.repository.datasource.local.SharedPreferencesDataSource
 import ru.linew.todoapp.data.repository.datasource.remote.RemoteDataSource
+import ru.linew.todoapp.presentation.background.repository.DeadlineTodoProvider
 import ru.linew.todoapp.presentation.model.TodoItem
 import ru.linew.todoapp.presentation.model.toDto
 import ru.linew.todoapp.presentation.repository.TodoItemsRepository
+import ru.linew.todoapp.shared.Constants
 import javax.inject.Inject
 
 
@@ -19,7 +21,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val sharedPreferencesDataSource: SharedPreferencesDataSource
 ) :
-    TodoItemsRepository {
+    TodoItemsRepository, DeadlineTodoProvider {
 
     private val _todoListFlow: MutableStateFlow<List<TodoItem>> = MutableStateFlow(emptyList())
     override val todoListFlow: StateFlow<List<TodoItem>>
@@ -56,8 +58,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
             remoteDataSource.deleteTodoById(id)
         } catch (e: Exception) {
             sharedPreferencesDataSource.flagNeedSyncUp()
-        }
-        finally {
+        } finally {
             localDataSource.deleteTodoById(id)
 
         }
@@ -91,6 +92,10 @@ class TodoItemsRepositoryImpl @Inject constructor(
         } finally {
             _todoListFlow.emit(localTodos.map { it.toUi() })
         }
+    }
+
+    override suspend fun getDeadlineTodoList(todayMillis: Long): List<TodoItem> {
+        return localDataSource.getListOfTodos().filter { (it.deadlineTime != null) && (it.deadlineTime - todayMillis) < Constants.MILLIS_IN_DAY }.map { it.toUi() }
     }
 
 }

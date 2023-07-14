@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.MaterialDialogState
@@ -191,6 +192,7 @@ fun TodoChoosePriorityButton(
 }
 
 @Composable
+@Preview
 fun TodoDeleteDivider() {
     Divider(
         thickness = 0.5.dp,
@@ -200,6 +202,7 @@ fun TodoDeleteDivider() {
 }
 
 @Composable
+@Preview
 fun TodoMakeUntilDivider() {
     Divider(
         thickness = 0.5.dp,
@@ -398,5 +401,6 @@ fun TodoDatePicker(
         }
     }
 }
+
 
 fun LocalDate.toUnixTime(): Long = this.atStartOfDay().toInstant(ZoneOffset.UTC).epochSecond * 1000

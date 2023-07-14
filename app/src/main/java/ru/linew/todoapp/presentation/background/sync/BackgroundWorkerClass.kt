@@ -1,4 +1,4 @@
-package ru.linew.todoapp.presentation.background
+package ru.linew.todoapp.presentation.background.sync
 
 import android.content.Context
 import androidx.work.CoroutineWorker
