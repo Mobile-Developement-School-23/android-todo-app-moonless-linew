@@ -47,14 +47,14 @@ class MainActivity : AppCompatActivity() {
     fun showSettingsDialog() {
         MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.choose_theme))
-            .setPositiveButton(R.string.ok) { p1, p2 ->
+            .setPositiveButton(R.string.ok) { _, _ ->
                 sharedPreferences.edit().putString(
                     Constants.SHARED_PREFERENCES_THEME_KEY,
                     themeMode.toString()
                 ).apply()
                 setThemeMode()
             }
-            .setNegativeButton(R.string.cancel) { p1, p2 ->
+            .setNegativeButton(R.string.cancel) { _, _ ->
                 themeMode =
                     ThemeMode.valueOf(
                         sharedPreferences.getString(

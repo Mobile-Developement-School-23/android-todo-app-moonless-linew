@@ -5,15 +5,14 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        jcenter()
-        maven { url 'https://jitpack.io' }
         google()
         mavenCentral()
     }
+    versionCatalogs {
+        create("libs") {
+            from(files("../libs.toml"))
+        }
+    }
 }
-rootProject.name = "ToDoApp"
-include ':app'
